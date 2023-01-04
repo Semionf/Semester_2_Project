@@ -1,0 +1,13 @@
+C:\Users\sfurl\source\repos\ProLobby.DAL\ProLobby.Entities\bin\Debug\ProLobby.Entities.dll
+C:\Users\sfurl\source\repos\ProLobby.DAL\ProLobby.Entities\bin\Debug\ProLobby.Entities.pdb
+C:\Users\sfurl\source\repos\ProLobby.DAL\ProLobby.Entities\bin\Debug\ProLobby.DAL.dll
+C:\Users\sfurl\source\repos\ProLobby.DAL\ProLobby.Entities\bin\Debug\ProLobby.Data.Sql.dll
+C:\Users\sfurl\source\repos\ProLobby.DAL\ProLobby.Entities\bin\Debug\ProLobby.Model.dll
+C:\Users\sfurl\source\repos\ProLobby.DAL\ProLobby.Entities\bin\Debug\ProLobby.DAL.pdb
+C:\Users\sfurl\source\repos\ProLobby.DAL\ProLobby.Entities\bin\Debug\ProLobby.Data.Sql.pdb
+C:\Users\sfurl\source\repos\ProLobby.DAL\ProLobby.Entities\bin\Debug\ProLobby.Model.pdb
+C:\Users\sfurl\source\repos\ProLobby.DAL\ProLobby.Entities\obj\Debug\PromoteIt.Entities.csproj.AssemblyReference.cache
+C:\Users\sfurl\source\repos\ProLobby.DAL\ProLobby.Entities\obj\Debug\PromoteIt.Entities.csproj.CoreCompileInputs.cache
+C:\Users\sfurl\source\repos\ProLobby.DAL\ProLobby.Entities\obj\Debug\PromoteIt.Entities.csproj.CopyComplete
+C:\Users\sfurl\source\repos\ProLobby.DAL\ProLobby.Entities\obj\Debug\ProLobby.Entities.dll
+C:\Users\sfurl\source\repos\ProLobby.DAL\ProLobby.Entities\obj\Debug\ProLobby.Entities.pdb

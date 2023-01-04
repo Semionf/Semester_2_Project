@@ -1,0 +1,6 @@
+C:\Users\sfurl\source\repos\ProLobby.DAL\ProLobby.Model\bin\Debug\ProLobby.Model.dll
+C:\Users\sfurl\source\repos\ProLobby.DAL\ProLobby.Model\bin\Debug\ProLobby.Model.pdb
+C:\Users\sfurl\source\repos\ProLobby.DAL\ProLobby.Model\obj\Debug\PromoteIt.Model.csproj.AssemblyReference.cache
+C:\Users\sfurl\source\repos\ProLobby.DAL\ProLobby.Model\obj\Debug\PromoteIt.Model.csproj.CoreCompileInputs.cache
+C:\Users\sfurl\source\repos\ProLobby.DAL\ProLobby.Model\obj\Debug\ProLobby.Model.dll
+C:\Users\sfurl\source\repos\ProLobby.DAL\ProLobby.Model\obj\Debug\ProLobby.Model.pdb
