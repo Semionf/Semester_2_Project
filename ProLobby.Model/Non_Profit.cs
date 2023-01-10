@@ -13,5 +13,6 @@ namespace PromoteIt.Model
         public string Non_Profit_Name { get; set; }
         public string Email { get; set; }
         public string Link_Non_Profit_Website { get; set; }
+
     }
 }

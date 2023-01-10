@@ -14,5 +14,6 @@ namespace PromoteIt.Model
         public string Address { get; set; }
         public string Phone { get; set; }
         public int Money_Earned { get; set; }
+        public Tweet[] tweets { get; set; }
     }
 }

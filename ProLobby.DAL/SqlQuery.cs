@@ -11,12 +11,11 @@ namespace PromoteIt.DAL
     {
         public delegate void SetDataReader_delegate(SqlDataReader reader);
         public delegate object SetResulrDataReader_delegate(SqlDataReader reader);
-        private static string connectionString = "Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=Northwind;Data Source=MSI\\SQLEXPRESS";
+        private static string connectionString = "Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=PromoteIt;Data Source=MSI\\SQLEXPRESS";
         public static void RunCommand(string sqlQuery, SetDataReader_delegate func)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-
                 string queryString = sqlQuery;
 
                 // Adapter
@@ -29,11 +28,32 @@ namespace PromoteIt.DAL
                         func(reader);
                     }
                 }
+            }
+            
+        }
+        public static string RunCommandCheck(string sqlQuery, string Email)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string answer;
+                string queryString = sqlQuery;
 
+
+                // Adapter
+
+                connection.Open();
+                
+                using (SqlCommand command = new SqlCommand(queryString, connection))
+                {
+                    command.Parameters.AddWithValue("@email", Email);
+                    answer = command.ExecuteScalar().ToString();
+                    command.ExecuteNonQuery();
+                }
+
+                return answer;
             }
 
         }
-
         public static object RunCommandResult(string sqlQuery, SetResulrDataReader_delegate func)
         {
             object ret = null;

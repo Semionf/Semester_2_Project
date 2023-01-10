@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PromoteIt.Entities
 {
-    internal class Tweets
+    public class Tweets
     {
     }
 }

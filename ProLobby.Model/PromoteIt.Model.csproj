@@ -45,9 +45,12 @@
     <Compile Include="Campaign.cs" />
     <Compile Include="Non_Profit.cs" />
     <Compile Include="Product.cs" />
+    <Compile Include="Product_Bought.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Social_Activist.cs" />
     <Compile Include="Tweet.cs" />
+    <Compile Include="User.cs" />
+    <Compile Include="UserMessage.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

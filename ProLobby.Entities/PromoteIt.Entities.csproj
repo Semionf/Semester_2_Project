@@ -49,6 +49,8 @@
     <Compile Include="Business_Companies.cs" />
     <Compile Include="Social_Activists.cs" />
     <Compile Include="Tweets.cs" />
+    <Compile Include="UserMessages.cs" />
+    <Compile Include="Users.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ProLobby.DAL\PromoteIt.DAL.csproj">

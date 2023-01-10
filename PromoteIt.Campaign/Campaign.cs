@@ -7,6 +7,9 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using PromoteIt.Entities;
+using PromoteIt.Model;
+using static System.Collections.Specialized.BitVector32;
 
 namespace PromoteIt.Campaign
 {
@@ -14,22 +17,27 @@ namespace PromoteIt.Campaign
     {
         [FunctionName("Campaign")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "Campaign/{action}")] HttpRequest req, string action,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            string name = req.Query["name"];
+            switch (action)
+            {
+                case "get":
+                    MainManager.Instance.InitCampaign();
+                    return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.campaignsList));
 
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            name = name ?? data?.name;
-
-            string responseMessage = string.IsNullOrEmpty(name)
-                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This HTTP triggered function executed successfully.";
-
-            return new OkObjectResult(responseMessage);
+                case "post":
+                    string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                    PromoteIt.Model.Campaign campaign = new PromoteIt.Model.Campaign();
+                    campaign = System.Text.Json.JsonSerializer.Deserialize<PromoteIt.Model.Campaign>(requestBody);
+                    MainManager.Instance.campaigns.addCampaign(campaign);
+                    break;
+                default:
+                    break;
+            }
+            return null;
         }
     }
 }

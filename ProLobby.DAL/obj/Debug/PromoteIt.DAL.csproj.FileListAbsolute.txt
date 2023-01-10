@@ -4,3 +4,9 @@ C:\Users\sfurl\source\repos\ProLobby.DAL\ProLobby.DAL\obj\Debug\PromoteIt.DAL.cs
 C:\Users\sfurl\source\repos\ProLobby.DAL\ProLobby.DAL\obj\Debug\PromoteIt.DAL.csproj.CoreCompileInputs.cache
 C:\Users\sfurl\source\repos\ProLobby.DAL\ProLobby.DAL\obj\Debug\ProLobby.DAL.dll
 C:\Users\sfurl\source\repos\ProLobby.DAL\ProLobby.DAL\obj\Debug\ProLobby.DAL.pdb
+C:\Users\sfurl\source\repos\PromoteIt\ProLobby.DAL\bin\Debug\ProLobby.DAL.dll
+C:\Users\sfurl\source\repos\PromoteIt\ProLobby.DAL\bin\Debug\ProLobby.DAL.pdb
+C:\Users\sfurl\source\repos\PromoteIt\ProLobby.DAL\obj\Debug\PromoteIt.DAL.csproj.AssemblyReference.cache
+C:\Users\sfurl\source\repos\PromoteIt\ProLobby.DAL\obj\Debug\PromoteIt.DAL.csproj.CoreCompileInputs.cache
+C:\Users\sfurl\source\repos\PromoteIt\ProLobby.DAL\obj\Debug\ProLobby.DAL.dll
+C:\Users\sfurl\source\repos\PromoteIt\ProLobby.DAL\obj\Debug\ProLobby.DAL.pdb

@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PromoteIt.Model", "ProLobby
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PromoteIt.Data.Sql", "ProLobby.Data.Sql\PromoteIt.Data.Sql.csproj", "{0CA77A69-CE34-4B5B-ABE2-8BB0618A7A28}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PromoteIt.Server", "PromoteIt.Campaign\PromoteIt.Server.csproj", "{C61C25ED-AEB9-4D60-AEE5-47893E26A0A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PromoteIt.Server", "PromoteIt.Campaign\PromoteIt.Server.csproj", "{C61C25ED-AEB9-4D60-AEE5-47893E26A0A3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

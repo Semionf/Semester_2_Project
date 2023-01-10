@@ -9,3 +9,14 @@ C:\Users\sfurl\source\repos\ProLobby.DAL\ProLobby.Data.Sql\obj\Debug\PromoteIt.D
 C:\Users\sfurl\source\repos\ProLobby.DAL\ProLobby.Data.Sql\obj\Debug\PromoteIt.Data.Sql.csproj.CopyComplete
 C:\Users\sfurl\source\repos\ProLobby.DAL\ProLobby.Data.Sql\obj\Debug\ProLobby.Data.Sql.dll
 C:\Users\sfurl\source\repos\ProLobby.DAL\ProLobby.Data.Sql\obj\Debug\ProLobby.Data.Sql.pdb
+C:\Users\sfurl\source\repos\PromoteIt\ProLobby.Data.Sql\obj\Debug\PromoteIt.Data.Sql.csproj.AssemblyReference.cache
+C:\Users\sfurl\source\repos\PromoteIt\ProLobby.Data.Sql\obj\Debug\PromoteIt.Data.Sql.csproj.CoreCompileInputs.cache
+C:\Users\sfurl\source\repos\PromoteIt\ProLobby.Data.Sql\obj\Debug\ProLobby.Data.Sql.dll
+C:\Users\sfurl\source\repos\PromoteIt\ProLobby.Data.Sql\obj\Debug\ProLobby.Data.Sql.pdb
+C:\Users\sfurl\source\repos\PromoteIt\ProLobby.Data.Sql\bin\Debug\ProLobby.Data.Sql.dll
+C:\Users\sfurl\source\repos\PromoteIt\ProLobby.Data.Sql\bin\Debug\ProLobby.Data.Sql.pdb
+C:\Users\sfurl\source\repos\PromoteIt\ProLobby.Data.Sql\bin\Debug\ProLobby.DAL.dll
+C:\Users\sfurl\source\repos\PromoteIt\ProLobby.Data.Sql\bin\Debug\ProLobby.Model.dll
+C:\Users\sfurl\source\repos\PromoteIt\ProLobby.Data.Sql\bin\Debug\ProLobby.DAL.pdb
+C:\Users\sfurl\source\repos\PromoteIt\ProLobby.Data.Sql\bin\Debug\ProLobby.Model.pdb
+C:\Users\sfurl\source\repos\PromoteIt\ProLobby.Data.Sql\obj\Debug\PromoteIt.Data.Sql.csproj.CopyComplete
