@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +15,8 @@ namespace PromoteIt.Model
         public int Quantity { get; set; }
         private int _Social_Activist_ID;
         public int Social_Activist_ID { get { return _Social_Activist_ID; } set { if (_Social_Activist_ID == 0) _Social_Activist_ID = value; } }
-        public int Price { get; set; }
-        public int Business_Company_ID { get; set; }
+        public decimal Price { get; set; }
+        public string Business_Email { get; set; }
+        public string CampaignHashtag { get; set; }
     }
 }

@@ -17,23 +17,27 @@ namespace PromoteIt.Campaign
     {
         [FunctionName("Campaign")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "Campaign/{action}")] HttpRequest req, string action,
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "Campaign/{action}/{Email?}")] HttpRequest req, string action, string Email,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
             switch (action)
             {
-                case "get":
-                    MainManager.Instance.InitCampaign();
+                case "GET":
+                    MainManager.Instance.InitCampaign(Email);
                     return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.campaignsList));
 
-                case "post":
+                case "POST":
                     string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                     PromoteIt.Model.Campaign campaign = new PromoteIt.Model.Campaign();
                     campaign = System.Text.Json.JsonSerializer.Deserialize<PromoteIt.Model.Campaign>(requestBody);
                     MainManager.Instance.campaigns.addCampaign(campaign);
                     break;
+                case "LOAD":
+                    string requestGetBody2 = await new StreamReader(req.Body).ReadToEndAsync();
+                    MainManager.Instance.InitCampaign();
+                    return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.campaignsList));
                 default:
                     break;
             }

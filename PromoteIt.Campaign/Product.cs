@@ -16,22 +16,30 @@ namespace PromoteIt.Server
     {
         [FunctionName("Product")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "Product/{action}")] HttpRequest req, string action,
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "Product/{action}/{Email?}")] HttpRequest req, string action, string Email,
             ILogger log)
         {
             switch (action)
             {
-                case "get":
+                case"BUSINESS":
+                    string requestGetBody3 = await new StreamReader(req.Body).ReadToEndAsync();
+                    MainManager.Instance.InitProductsBought(Email);
+                    return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.productsList));
+                case "GET":
                     string requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
-                    MainManager.Instance.InitProducts();
-                    return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance));
+                    MainManager.Instance.InitProducts(Email);
+                    return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.productsList));
                     
-                case "post":
+                case "POST":
                     string requestPostBody = await new StreamReader(req.Body).ReadToEndAsync();
                     Model.Product product = new Model.Product();
                     product = System.Text.Json.JsonSerializer.Deserialize<Model.Product>(requestPostBody);
                     MainManager.Instance.products.addProduct(product);
                     break;
+                case "GETALL":
+                    string requestGetBody2 = await new StreamReader(req.Body).ReadToEndAsync();
+                    MainManager.Instance.InitProducts();
+                    return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.productsList));
                 default:
                     break;
             }

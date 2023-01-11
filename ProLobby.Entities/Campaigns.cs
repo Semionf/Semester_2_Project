@@ -12,6 +12,10 @@ namespace PromoteIt.Entities
     public class Campaigns
     {
         private static Data.Sql.Campaigns dataSql = new Data.Sql.Campaigns();
+        public object LoadCampaigns(string Email)
+        {
+            return dataSql.LoadCampaigns(Email);
+        }
         public object LoadCampaigns()
         {
             return dataSql.LoadCampaigns();

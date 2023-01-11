@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -54,40 +55,73 @@ namespace PromoteIt.Data.Sql
         }
         public void addProduct(Product product)
         {
-            string Query = string.Format("INSERT INTO Product (Price, Business_Company_ID) VALUES ({0}, '{1}', '{2}')", product.Name, product.Price, product.Business_Company_ID);
+            string Query = string.Format($"declare @email nvarchar(40) select @email = (select Non_Profit_Organization.Organization_Email from \r\nNon_Profit_Organization inner join\r\nCampaign on Campaign.Organization_Email = Non_Profit_Organization.Organization_Email\r\nwhere Hashtag = '{product.CampaignHashtag}')  \r\nINSERT INTO Donation (Name, Price, Quantity, Business_Email, Organization_Email) VALUES ('{product.Name}', {product.Price}, {product.Quantity},'{product.Business_Email}',@email)");
             SqlQuery.RunNonQuery(Query);
+        }
+        public object LoadProducts(string Email)
+        {
+            {
+                return SqlQuery.RunCommandResult($"if exists(SELECT * FROM Donation WHERE Organization_Email = '{Email}')\r\nbegin\r\n\tselect * From Donation where Organization_Email in ('{Email}')\r\nend", insertBoughtToHashTableFromDB);
+            }
+        }
+        public object LoadProductsBought(string Email)
+        {
+            {
+                return SqlQuery.RunCommandResult($"if exists(SELECT Business_Email FROM Products_Bought WHERE Business_Email = '{Email}')\r\nbegin\r\n\tselect * From Products_Bought where Business_Email in ('{Email}')\r\nend", insertBoughtToHashTableFromDB);
+            }
         }
         public object LoadProducts()
         {
             {
-                return SqlQuery.RunCommandResult("Select * from Products_Bought", insertToHashTableFromDB);
+                return SqlQuery.RunCommandResult($"Select * from Donation", insertListToHashTableFromDB);
             }
         }
-
-        public object insertToHashTableFromDB(SqlDataReader reader)
+        public object insertBoughtToHashTableFromDB(SqlDataReader reader)
         {
-            Hashtable products_bought = new Hashtable();
+            Hashtable products = new Hashtable();
             while (reader.Read())
             {
-                Model.Product_Bought product = new Model.Product_Bought();
+                Model.Product product = new Model.Product();
                 product.ID = reader.GetInt32(0);
                 product.Name = reader.GetString(1);
-                product.Quantity = reader.GetInt32(2);
-                product.Social_Activist_ID = reader.GetInt32(3);
-                product.TweetID = reader.GetInt32(5);
-
-                products_bought.Add(product.ID, product);
+                product.Price = reader.GetDecimal(2);
+                product.Quantity = reader.GetInt32(3);
+                product.Business_Email = reader.GetString(4);
+                product.CampaignHashtag = reader.GetString(5);
+                products.Add(product.ID, product);
             }
-            return products_bought;
+            return products;
+        }
+        public object insertListToHashTableFromDB(SqlDataReader reader)
+        {
+            Hashtable productsList = new Hashtable();
+            while (reader.Read())
+            {
+                Model.Product product = new Model.Product();
+                product.ID = reader.GetInt32(0);
+                product.Name = reader.GetString(1);
+                product.Price = reader.GetDecimal(2);
+                product.Quantity = reader.GetInt32(3);
+           
+
+                productsList.Add(product.ID, product);
+            }
+            return productsList;
         }
     }
 
     public class Campaigns
     {
+        public object LoadCampaigns(string Email)
+        {
+            {
+                return SqlQuery.RunCommandResult($"Select * from Campaign where Organization_Email in ('{Email}')", insertToHashTableFromDB);
+            }
+        }
         public object LoadCampaigns()
         {
             {
-                return SqlQuery.RunCommandResult("Select * from Campaign", insertToHashTableFromDB);
+                return SqlQuery.RunCommandResult($"Select * from Campaign", insertToHashTableFromDB);
             }
         }
         public object insertToHashTableFromDB(SqlDataReader reader)
@@ -97,10 +131,9 @@ namespace PromoteIt.Data.Sql
             {
                 Model.Campaign campaign = new Model.Campaign();
                 campaign.ID = reader.GetInt32(0);
-                campaign.CampaignName = reader.GetString(1);
-                campaign.Link_Campaign_URL = reader.GetString(2);
-                campaign.HashTag = reader.GetString(3);
-                campaign.Non_Profit_ID = reader.GetInt32(4);
+                campaign.Link = reader.GetString(1);
+                campaign.Hashtag = reader.GetString(2);
+                campaign.Email = reader.GetString(3);
 
                 campaigns.Add(campaign.ID, campaign);
             }
@@ -108,7 +141,7 @@ namespace PromoteIt.Data.Sql
         }
         public void addCampaign(Campaign campaign)
         {
-            string Query = string.Format("INSERT INTO Campaign (CampaignName, Link_Campaign_URL, HashTag, Non_Profit_ID) VALUES ('{0}', '{1}', '{2}',{3})", campaign.CampaignName, campaign.Link_Campaign_URL, campaign.HashTag, campaign.Non_Profit_ID);
+            string Query = string.Format($"INSERT INTO Campaign (Link, Hashtag, Organization_Email) VALUES ('{campaign.Link}', '{campaign.Hashtag}', '{campaign.Email}')");
             SqlQuery.RunNonQuery(Query);
         }
     }
@@ -129,16 +162,15 @@ namespace PromoteIt.Data.Sql
         {
             if(user.Role == "Non-Profit Organization Representative")
             {
-                 Query = string.Format($"declare @UserID int \r\n INSERT INTO Users (Role, Email) VALUES ('{user.Role}', '{user.Email}') \r\n select @UserID = (Select ID from Users where Email = '{user.Email}')\r\n " +
-                     $"INSERT INTO Non_Profit_Organization (Name, Email, Link, User_ID) VALUES ('{user.Name}','{user.Email}', '{user.Link}',@UserID)");
+                 Query = string.Format($"INSERT INTO Users (Role, Email) VALUES ('{user.Role}', '{user.Email}') \r\n INSERT INTO Non_Profit_Organization (Name, Email, Link, Organization_Email) VALUES ('{user.Name}','{user.Email}', '{user.Link}','{user.Email}')");
             }
             else if (user.Role == "Business Company Representative")
             {
-                Query = string.Format($"declare @UserID int \r\n INSERT INTO Users (Role, Email) VALUES ('{user.Role}', '{user.Email}')\r\n select @UserID = (Select ID from Users where Email = '{user.Email}')\r\n INSERT INTO Business_Company (Name, Email, Link, User_ID) VALUES ('{user.Name}','{user.Email}', '{user.Link}',@UserID)");
+                Query = string.Format($"INSERT INTO Users (Role, Email) VALUES ('{user.Role}', '{user.Email}')\r\n \r\n INSERT INTO Business_Company (Name, Email, Link, Business_Email) VALUES ('{user.Name}','{user.Email}', '{user.Link}', '{user.Email}')");
             }
             else
             {
-                Query = string.Format($"declare @UserID int \r\n INSERT INTO Users (Role, Email) VALUES ('{user.Role}', '{user.Email}')\r\n select @UserID = (Select ID from Users where Email = '{user.Email}')\r\n INSERT INTO Social_Activist ( Email, Address, Link, User_ID) VALUES ('{user.Email}', '{user.Address}', '{user.Link}',@UserID)");
+                Query = string.Format($"INSERT INTO Users (Role, Email) VALUES ('{user.Role}', '{user.Email}')\r\n INSERT INTO Social_Activist ( Email, Address, Phone, Activist_Email) VALUES ('{user.Email}', '{user.Address}', '{user.Phone}''{user.Link}','{user.Email}')");
             }
             SqlQuery.RunNonQuery(Query);
         }

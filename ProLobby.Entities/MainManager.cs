@@ -23,9 +23,22 @@ namespace PromoteIt.Entities
         public Hashtable productsList = new Hashtable();
         public Hashtable usersList = new Hashtable();
         public UserMessage message = new UserMessage();
+        public void InitCampaign(string Email)
+        {
+            campaignsList = (Hashtable)campaigns.LoadCampaigns(Email);
+        }
         public void InitCampaign()
         {
             campaignsList = (Hashtable)campaigns.LoadCampaigns();
+        }
+        public void InitProducts(string Email)
+        {
+            productsList = (Hashtable)products.LoadProducts(Email);
+        }
+     
+        public void InitProductsBought(string Email)
+        {
+            productsList = (Hashtable)products.LoadProductsBought(Email);
         }
         public void InitProducts()
         {

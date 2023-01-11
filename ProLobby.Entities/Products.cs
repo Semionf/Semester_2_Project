@@ -15,6 +15,14 @@ namespace PromoteIt.Entities
         {
             dataSql.addProduct(product);
         }
+        public object LoadProducts(string Email)
+        {
+            return dataSql.LoadProducts(Email);
+        }
+        public object LoadProductsBought(string Email)
+        {
+            return dataSql.LoadProductsBought(Email);
+        }
         public object LoadProducts()
         {
             return dataSql.LoadProducts();
