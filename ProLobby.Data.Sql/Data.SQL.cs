@@ -55,7 +55,7 @@ namespace PromoteIt.Data.Sql
         }
         public void addProduct(Product product)
         {
-            string Query = string.Format($"declare @email nvarchar(40) select @email = (select Non_Profit_Organization.Organization_Email from \r\nNon_Profit_Organization inner join\r\nCampaign on Campaign.Organization_Email = Non_Profit_Organization.Organization_Email\r\nwhere Hashtag = '{product.CampaignHashtag}')  \r\nINSERT INTO Donation (Name, Price, Quantity, Business_Email, Organization_Email) VALUES ('{product.Name}', {product.Price}, {product.Quantity},'{product.Business_Email}',@email)");
+            string Query = string.Format($"declare @email nvarchar(40) select @email = (select Non_Profit_Organization.Organization_Email from \r\nNon_Profit_Organization inner join\r\nCampaign on Campaign.Organization_Email = Non_Profit_Organization.Organization_Email\r\nwhere Hashtag = '{product.CampaignHashtag}')  \r\nINSERT INTO Donation (Name, Price, Quantity, Business_Email, Organization_Email, Campaign_Hashtag) VALUES ('{product.Name}', {product.Price}, {product.Quantity},'{product.Business_Email}',@email, '{product.CampaignHashtag}')");
             SqlQuery.RunNonQuery(Query);
         }
         public object LoadProducts(string Email)
@@ -68,6 +68,12 @@ namespace PromoteIt.Data.Sql
         {
             {
                 return SqlQuery.RunCommandResult($"if exists(SELECT Business_Email FROM Products_Bought WHERE Business_Email = '{Email}')\r\nbegin\r\n\tselect * From Products_Bought where Business_Email in ('{Email}')\r\nend", insertBoughtToHashTableFromDB);
+            }
+        }
+        public object LoadMyProductsBought(string Email)
+        {
+            {
+                return SqlQuery.RunCommandResult($"if exists(SELECT Social_Activist_Email FROM Products_Bought WHERE Social_Activist_Email = '{Email}')\r\nbegin\r\n\tselect * From Products_Bought where Social_Activist_Email in ('{Email}')\r\nend", insertBoughtToHashTableFromDB);
             }
         }
         public object LoadProducts()
@@ -102,7 +108,7 @@ namespace PromoteIt.Data.Sql
                 product.Name = reader.GetString(1);
                 product.Price = reader.GetDecimal(2);
                 product.Quantity = reader.GetInt32(3);
-           
+                product.CampaignHashtag= reader.GetString(5);
 
                 productsList.Add(product.ID, product);
             }
@@ -170,7 +176,7 @@ namespace PromoteIt.Data.Sql
             }
             else
             {
-                Query = string.Format($"INSERT INTO Users (Role, Email) VALUES ('{user.Role}', '{user.Email}')\r\n INSERT INTO Social_Activist ( Email, Address, Phone, Activist_Email) VALUES ('{user.Email}', '{user.Address}', '{user.Phone}''{user.Link}','{user.Email}')");
+                Query = string.Format($"INSERT INTO Users (Role, Email) VALUES ('{user.Role}', '{user.Email}')\r\n INSERT INTO Social_Activist ( Email, Address, Phone, Activist_Email, MoneyEarned) VALUES ('{user.Email}', '{user.Address}', '{user.Phone}''{user.Link}','{user.Email}',0)");
             }
             SqlQuery.RunNonQuery(Query);
         }
@@ -180,6 +186,11 @@ namespace PromoteIt.Data.Sql
             {
                 return SqlQuery.RunCommandResult("Select * from Users", insertToHashTableFromDB);
             }
+        }
+
+        public object LoadBalance(string Email)
+        {
+            return SqlQuery.RunCommandResult($"Select MoneyEarned from Social_Activist where Email = '{Email}'", getBalance);
         }
         public object insertToHashTableFromDB(SqlDataReader reader)
         {
@@ -195,7 +206,17 @@ namespace PromoteIt.Data.Sql
             }
             return users;
         }
-      
+
+        public object getBalance(SqlDataReader reader)
+        {
+            int balance = 0;
+            while (reader.Read())
+            {
+                balance = (int)reader.GetDecimal(0);
+            }
+            return balance;
+        }
+
         public Boolean checkUser(string email)
         {
             string answer = SqlQuery.RunCommandCheck("declare @answer nvarchar(10)\r\n\r\nif Exists (Select * from Users where Email = @email)\r\nbegin\r\n\tselect @answer = 'True'\r\nend\r\nelse\r\nbegin\r\n\tselect @answer = 'False'\r\nend\r\n\r\nselect @answer",email);

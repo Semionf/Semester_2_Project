@@ -13,6 +13,7 @@ namespace PromoteIt.Entities
     public class MainManager
     {
         public UserMessages messages = new UserMessages();
+        public int UserBalance = 0;
         public Campaigns campaigns= new Campaigns();
         public Users users = new Users();
         public Products products= new Products();
@@ -35,7 +36,12 @@ namespace PromoteIt.Entities
         {
             productsList = (Hashtable)products.LoadProducts(Email);
         }
-     
+
+        public void InitMyProductsBought(string Email)
+        {
+            productsList = (Hashtable)products.LoadMyProductsBought(Email);
+        }
+
         public void InitProductsBought(string Email)
         {
             productsList = (Hashtable)products.LoadProductsBought(Email);
@@ -47,6 +53,10 @@ namespace PromoteIt.Entities
         public void InitUsers()
         {
             usersList = (Hashtable)users.LoadUsers();
+        }
+        public void getBalance(string Email)
+        {
+            UserBalance = users.LoadBalance(Email);
         }
     }
 }

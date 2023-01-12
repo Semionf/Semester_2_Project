@@ -23,6 +23,10 @@ namespace PromoteIt.Entities
         {
             return dataSql.LoadProductsBought(Email);
         }
+        public object LoadMyProductsBought(string Email)
+        {
+            return dataSql.LoadMyProductsBought(Email);
+        }
         public object LoadProducts()
         {
             return dataSql.LoadProducts();

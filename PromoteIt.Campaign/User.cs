@@ -35,7 +35,11 @@ namespace PromoteIt.Server
                     string requestCheckBody = await new StreamReader(req.Body).ReadToEndAsync();
                     
                     return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.users.checkUser(Email)));
-                    
+                case "BALANCE":
+                    string requestGetBody2 = await new StreamReader(req.Body).ReadToEndAsync();
+                    MainManager.Instance.getBalance(Email);
+                    return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.UserBalance));
+
                 default:
                     break;
             }

@@ -20,7 +20,10 @@ namespace PromoteIt.Entities
 
             return dataSql.LoadUsers();
         }
-       
+        public int LoadBalance(string Email)
+        {
+            return (int)dataSql.LoadBalance(Email);
+        }
         public object checkUser(string email)
         {
             return dataSql.checkUser(email);

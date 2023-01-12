@@ -29,12 +29,22 @@ namespace PromoteIt.Server
                     string requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
                     MainManager.Instance.InitProducts(Email);
                     return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.productsList));
-                    
+                case "BOUGHT":
+                    string requestGetBody4 = await new StreamReader(req.Body).ReadToEndAsync();
+                    MainManager.Instance.InitMyProductsBought(Email);
+                    return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.productsList));
+                case "BUY":
+                    string requestPostBody5 = await new StreamReader(req.Body).ReadToEndAsync();
+                    Model.Product product = new Model.Product();
+                    product = System.Text.Json.JsonSerializer.Deserialize<Model.Product>(requestPostBody5);
+                    MainManager.Instance.products.addProduct(product);
+                    break;
+
                 case "POST":
                     string requestPostBody = await new StreamReader(req.Body).ReadToEndAsync();
-                    Model.Product product = new Model.Product();
+                    Model.Product product2 = new Model.Product();
                     product = System.Text.Json.JsonSerializer.Deserialize<Model.Product>(requestPostBody);
-                    MainManager.Instance.products.addProduct(product);
+                    MainManager.Instance.products.addProduct(product2);
                     break;
                 case "GETALL":
                     string requestGetBody2 = await new StreamReader(req.Body).ReadToEndAsync();
