@@ -21,7 +21,7 @@ namespace PromoteIt.Campaign
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
-
+            string requestBody;
             switch (action)
             {
                 case "GET":
@@ -29,13 +29,13 @@ namespace PromoteIt.Campaign
                     return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.campaignsList));
 
                 case "POST":
-                    string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                    requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                     PromoteIt.Model.Campaign campaign = new PromoteIt.Model.Campaign();
                     campaign = System.Text.Json.JsonSerializer.Deserialize<PromoteIt.Model.Campaign>(requestBody);
                     MainManager.Instance.campaigns.addCampaign(campaign);
                     break;
                 case "LOAD":
-                    string requestGetBody2 = await new StreamReader(req.Body).ReadToEndAsync();
+                    requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                     MainManager.Instance.InitCampaign();
                     return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.campaignsList));
                 default:

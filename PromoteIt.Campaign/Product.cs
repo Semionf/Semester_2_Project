@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using PromoteIt.Entities;
 using PromoteIt.Model;
+using Tweetinvi;
 
 namespace PromoteIt.Server
 {
@@ -19,35 +20,47 @@ namespace PromoteIt.Server
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "Product/{action}/{Email?}")] HttpRequest req, string action, string Email,
             ILogger log)
         {
+            string requestGetBody = "";
             switch (action)
             {
+                
                 case"BUSINESS":
-                    string requestGetBody3 = await new StreamReader(req.Body).ReadToEndAsync();
+                    requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
                     MainManager.Instance.InitProductsBought(Email);
                     return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.productsList));
                 case "GET":
-                    string requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
+                    requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
                     MainManager.Instance.InitProducts(Email);
                     return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.productsList));
-                case "BOUGHT":
-                    string requestGetBody4 = await new StreamReader(req.Body).ReadToEndAsync();
-                    MainManager.Instance.InitMyProductsBought(Email);
+                case "SUPPLIED":
+                    requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
+                    MainManager.Instance.InitMyProductsSupplied(Email);
+                    return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.productsList));
+                case "NOTSUPPLIED":
+                    requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
+                    MainManager.Instance.InitMyProductsNotSupplied(Email);
                     return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.productsList));
                 case "BUY":
-                    string requestPostBody5 = await new StreamReader(req.Body).ReadToEndAsync();
+                    requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
                     Model.Product product = new Model.Product();
-                    product = System.Text.Json.JsonSerializer.Deserialize<Model.Product>(requestPostBody5);
-                    MainManager.Instance.products.addProduct(product);
+                    product = System.Text.Json.JsonSerializer.Deserialize<Model.Product>(requestGetBody);
+                    MainManager.Instance.products.buyProduct(product);
                     break;
 
                 case "POST":
-                    string requestPostBody = await new StreamReader(req.Body).ReadToEndAsync();
+                    requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
                     Model.Product product2 = new Model.Product();
-                    product = System.Text.Json.JsonSerializer.Deserialize<Model.Product>(requestPostBody);
-                    MainManager.Instance.products.addProduct(product2);
+                    product = System.Text.Json.JsonSerializer.Deserialize<Model.Product>(requestGetBody);
+                    MainManager.Instance.products.addProduct(product);
+                    break;
+                case "SUPPLY":
+                    requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
+                    Model.Product product3 = new Model.Product();
+                    product = System.Text.Json.JsonSerializer.Deserialize<Model.Product>(requestGetBody);
+                    MainManager.Instance.products.supply(product);
                     break;
                 case "GETALL":
-                    string requestGetBody2 = await new StreamReader(req.Body).ReadToEndAsync();
+                    requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
                     MainManager.Instance.InitProducts();
                     return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.productsList));
                 default:

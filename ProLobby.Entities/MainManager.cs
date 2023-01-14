@@ -16,6 +16,7 @@ namespace PromoteIt.Entities
         public int UserBalance = 0;
         public Campaigns campaigns= new Campaigns();
         public Users users = new Users();
+        public Tweets tweets= new Tweets();
         public Products products= new Products();
         private static MainManager _Instance = new MainManager();
         public static MainManager Instance { get { return _Instance; } }
@@ -23,6 +24,7 @@ namespace PromoteIt.Entities
         public Hashtable campaignsList = new Hashtable();
         public Hashtable productsList = new Hashtable();
         public Hashtable usersList = new Hashtable();
+        public Hashtable tweetsList = new Hashtable();
         public UserMessage message = new UserMessage();
         public void InitCampaign(string Email)
         {
@@ -32,16 +34,20 @@ namespace PromoteIt.Entities
         {
             campaignsList = (Hashtable)campaigns.LoadCampaigns();
         }
+     
         public void InitProducts(string Email)
         {
             productsList = (Hashtable)products.LoadProducts(Email);
         }
 
-        public void InitMyProductsBought(string Email)
+        public void InitMyProductsSupplied(string Email)
         {
-            productsList = (Hashtable)products.LoadMyProductsBought(Email);
+            productsList = (Hashtable)products.LoadMyProductsSupplied(Email);
         }
-
+        public void InitMyProductsNotSupplied(string Email)
+        {
+            productsList = (Hashtable)products.LoadMyProductsNotSupplied(Email);
+        }
         public void InitProductsBought(string Email)
         {
             productsList = (Hashtable)products.LoadProductsBought(Email);
@@ -53,6 +59,14 @@ namespace PromoteIt.Entities
         public void InitUsers()
         {
             usersList = (Hashtable)users.LoadUsers();
+        }
+        public void InitTweets()
+        {
+            tweetsList = (Hashtable)tweets.LoadTweets();
+        }
+        public void InitTweets(string Email)
+        {
+            tweetsList = (Hashtable)tweets.LoadTweets(Email);
         }
         public void getBalance(string Email)
         {

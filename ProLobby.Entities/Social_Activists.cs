@@ -14,11 +14,5 @@ namespace PromoteIt.Entities
             Data.Sql.Social_Activists DataSql = new Data.Sql.Social_Activists();
             DataSql.AddUser(user);
         }
-
-        public void Buy_Product(Product product)
-        {
-            Data.Sql.Products DataSql = new Data.Sql.Products();
-            DataSql.BuyProduct(product);
-        }
     }
 }

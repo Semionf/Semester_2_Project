@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PromoteIt.DAL;
 using PromoteIt.Model;
+using Tweetinvi.Core.Models;
 
 namespace PromoteIt.Data.Sql
 {
@@ -41,39 +42,80 @@ namespace PromoteIt.Data.Sql
 
     public class Tweets
     {
-        //public void AddTweet(Tweet);
+        public void addTweet(myTweet tweet)
+        {
+            string Query = string.Format($"if not exists(select * from Tweet where ID = {tweet.ID}) begin insert into Tweet (Social_Activist_Email, Campaign_Hashtag, Text, TimesTweeted) VALUES ('{tweet.Social_Activist_Email}', '{tweet.Campaign_Hashtag}', '{tweet.Text}', 1) end else begin update Tweet set TimesTweeted = TimesTweeted + 1 where ID = {tweet.ID} end update Social_Activist set MoneyEarned = MoneyEarned + 1 where Email = {tweet.Social_Activist_Email}");
+            SqlQuery.RunNonQuery(Query);
+        }
+        public object LoadTweets()
+        {
+            {
+                return SqlQuery.RunCommandResult($"Select * from Tweet", insertTweetsToHashTableFromDB);
+            }
+        }
+        public object LoadTweets(string Email)
+        {
+            {
+                return SqlQuery.RunCommandResult($"Select * from Tweet where Social_Activist_Email = {Email}", insertTweetsToHashTableFromDB);
+            }
+        }
+        public object insertTweetsToHashTableFromDB(SqlDataReader reader)
+        {
+            Hashtable tweets = new Hashtable();
+            while (reader.Read())
+            {
+                Model.myTweet tweet = new Model.myTweet();
+                tweet.ID = reader.GetInt32(0);
+                tweet.Social_Activist_Email = reader.GetString(1);
+                tweet.Campaign_Hashtag = reader.GetString(2);
+                tweet.Text = reader.GetString(3);
+                tweet.TimesTweeted = reader.GetInt32(4);
+                tweets.Add(tweet.ID, tweet);
+            }
+            return tweets;
+        }
     }
 
     public class Products
     {
-        public void BuyProduct(Product product)
-        {
-            
-            string Query = string.Format("INSERT INTO Products_Bought  (Name, Quantity, Social_Activist_ID, ProductID) VALUES ('{0}', '{1}', '{2}', 0)", product.Name, product.Quantity, product.Social_Activist_ID, product.ID);
-            
-            SqlQuery.RunNonQuery(Query);
-        }
+       
         public void addProduct(Product product)
         {
             string Query = string.Format($"declare @email nvarchar(40) select @email = (select Non_Profit_Organization.Organization_Email from \r\nNon_Profit_Organization inner join\r\nCampaign on Campaign.Organization_Email = Non_Profit_Organization.Organization_Email\r\nwhere Hashtag = '{product.CampaignHashtag}')  \r\nINSERT INTO Donation (Name, Price, Quantity, Business_Email, Organization_Email, Campaign_Hashtag) VALUES ('{product.Name}', {product.Price}, {product.Quantity},'{product.Business_Email}',@email, '{product.CampaignHashtag}')");
             SqlQuery.RunNonQuery(Query);
         }
+        public void supply(Product product)
+        {
+            string Query = string.Format($"  UPDATE Supply Set isSent = 1 where Products_Bought_ID = {product.ID}");
+            SqlQuery.RunNonQuery(Query);
+        }
+        public void buyProduct(Product product)
+        {
+            string Query = string.Format($"declare @Email nvarchar(40), @ID int select @Email = (select Business_Email from Donation where Name = '{product.Name}' and ID = {product.ID})\r\nif not exists(Select DonationID from Products_Bought where DonationID = {product.ID})\r\n\tbegin\r\n\t\tInsert into Products_Bought (Name, Quantity, Social_Activist_Email,\r\n\t\tBusiness_Email, DonationID, Price, Hashtag) Values ('{product.Name}',{product.Quantity},'{product.Activist_Email}',@Email,{product.ID},{product.Price}, '{product.CampaignHashtag}')\r\n\tend\r\nelse\r\n\tbegin\r\n\t\tUPDATE Products_Bought SET Quantity = Quantity + {product.Quantity}, Price = Price + {product.Price} where DonationID = {product.ID}\r\n\tend Update Donation Set Quantity = Quantity - {product.Quantity} where ID = {product.ID} Update Social_Activist SET MoneyEarned = MoneyEarned - {product.Price} where Email = '{product.Activist_Email}' select @ID = (Select ID from Products_Bought where DonationID = {product.ID})\r\n\tif not exists (select * from Supply where Products_Bought_ID = @ID) begin insert into Supply (Products_Bought_ID, IsSent) values(@ID,0) end DELETE FROM Donation\r\nWHERE Quantity = 0;");
+            SqlQuery.RunNonQuery(Query);
+        }
         public object LoadProducts(string Email)
         {
             {
-                return SqlQuery.RunCommandResult($"if exists(SELECT * FROM Donation WHERE Organization_Email = '{Email}')\r\nbegin\r\n\tselect * From Donation where Organization_Email in ('{Email}')\r\nend", insertBoughtToHashTableFromDB);
+                return SqlQuery.RunCommandResult($"if exists(SELECT * FROM Donation WHERE Organization_Email = '{Email}')\r\nbegin\r\n\tselect * From Donation where Organization_Email in ('{Email}')\r\nend", insertDonatedToHashTableFromDB);
             }
         }
         public object LoadProductsBought(string Email)
         {
             {
-                return SqlQuery.RunCommandResult($"if exists(SELECT Business_Email FROM Products_Bought WHERE Business_Email = '{Email}')\r\nbegin\r\n\tselect * From Products_Bought where Business_Email in ('{Email}')\r\nend", insertBoughtToHashTableFromDB);
+                return SqlQuery.RunCommandResult($"if exists(SELECT Business_Email FROM Products_Bought WHERE Business_Email = '{Email}')\r\n\t\tbegin\r\n\t\t\tselect * From Products_Bought inner join Supply ON Products_Bought_ID = Products_Bought.ID\r\n\t\t\twhere Business_Email in ('{Email}')\r\n\t\tend", insertBoughtToHashTableFromDB);
             }
         }
-        public object LoadMyProductsBought(string Email)
+        public object LoadMyProductsSupplied(string Email)
         {
             {
-                return SqlQuery.RunCommandResult($"if exists(SELECT Social_Activist_Email FROM Products_Bought WHERE Social_Activist_Email = '{Email}')\r\nbegin\r\n\tselect * From Products_Bought where Social_Activist_Email in ('{Email}')\r\nend", insertBoughtToHashTableFromDB);
+                return SqlQuery.RunCommandResult($" if exists (select * from Products_Bought inner join Supply ON Products_Bought_ID = Products_Bought.ID \r\n  where Social_Activist_Email = '{Email}' and IsSent = 1 and Quantity > 0 )\r\n\tbegin\r\n\t\tselect * from Products_Bought inner join Supply ON Products_Bought_ID = Products_Bought.ID where Social_Activist_Email = '{Email}' and IsSent = 1\r\n\tend", insertActivistProductsToHashTableFromDB);
+            }
+        }
+        public object LoadMyProductsNotSupplied(string Email)
+        {
+            {
+                return SqlQuery.RunCommandResult($" if exists (select * from Products_Bought inner join Supply ON Products_Bought_ID = Products_Bought.ID \r\n  where Social_Activist_Email = '{Email}' and IsSent = 0 and Quantity > 0 )\r\n\tbegin\r\n\t\tselect * from Products_Bought inner join Supply ON Products_Bought_ID = Products_Bought.ID where Social_Activist_Email = '{Email}' and IsSent = 0\r\n\tend", insertActivistProductsToHashTableFromDB);
             }
         }
         public object LoadProducts()
@@ -90,10 +132,48 @@ namespace PromoteIt.Data.Sql
                 Model.Product product = new Model.Product();
                 product.ID = reader.GetInt32(0);
                 product.Name = reader.GetString(1);
+                product.Quantity = reader.GetInt32(2);
+                product.Price = reader.GetDecimal(3);
+                product.Activist_Email= reader.GetString(4);
+                product.Business_Email= reader.GetString(5);
+                product.CampaignHashtag = reader.GetString(8);
+                product.isSent = reader.GetBoolean(11);
+                //product.TweetID = reader.GetInt32(7);
+                products.Add(product.ID, product);
+            }
+            return products;
+        }
+        public object insertDonatedToHashTableFromDB(SqlDataReader reader)
+        {
+            Hashtable products = new Hashtable();
+            while (reader.Read())
+            {
+                Model.Product product = new Model.Product();
+                product.ID = reader.GetInt32(0);
+                product.Name = reader.GetString(1);
                 product.Price = reader.GetDecimal(2);
                 product.Quantity = reader.GetInt32(3);
                 product.Business_Email = reader.GetString(4);
                 product.CampaignHashtag = reader.GetString(5);
+
+
+                products.Add(product.ID, product);
+            }
+            return products;
+        }
+        public object insertActivistProductsToHashTableFromDB(SqlDataReader reader)
+        {
+            Hashtable products = new Hashtable();
+            while (reader.Read())
+            {
+                Model.Product product = new Model.Product();
+                product.ID = reader.GetInt32(0);
+                product.Name = reader.GetString(1);
+                product.Quantity = reader.GetInt32(2);
+                product.Price = reader.GetDecimal(3);
+                product.Activist_Email = reader.GetString(4);
+                product.Business_Email = reader.GetString(5);
+                product.CampaignHashtag = reader.GetString(8);
                 products.Add(product.ID, product);
             }
             return products;
@@ -160,11 +240,10 @@ namespace PromoteIt.Data.Sql
             SqlQuery.RunNonQuery(Query);
         }
     }
-
     public class Users
     {
         string Query;
-        public void addUser(User user)
+        public void addUser(myUser user)
         {
             if(user.Role == "Non-Profit Organization Representative")
             {
@@ -197,7 +276,7 @@ namespace PromoteIt.Data.Sql
             Hashtable users = new Hashtable();
             while (reader.Read())
             {
-                Model.User user = new Model.User();
+                Model.myUser user = new Model.myUser();
                 user.ID = reader.GetInt32(0);
                 user.Role = reader.GetString(1);
                 user.Email = reader.GetString(2);

@@ -11,7 +11,7 @@ namespace PromoteIt.Entities
     public class Users
     {
         PromoteIt.Data.Sql.Users dataSql = new PromoteIt.Data.Sql.Users();
-        public void addUser(User user)
+        public void addUser(myUser user)
         {
             dataSql.addUser(user);
         }

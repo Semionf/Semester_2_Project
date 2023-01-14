@@ -15,6 +15,14 @@ namespace PromoteIt.Entities
         {
             dataSql.addProduct(product);
         }
+        public void supply(Product product)
+        {
+            dataSql.supply(product);
+        }
+        public void buyProduct(Product product)
+        {
+            dataSql.buyProduct(product);
+        }
         public object LoadProducts(string Email)
         {
             return dataSql.LoadProducts(Email);
@@ -23,10 +31,16 @@ namespace PromoteIt.Entities
         {
             return dataSql.LoadProductsBought(Email);
         }
-        public object LoadMyProductsBought(string Email)
+        public object LoadMyProductsSupplied(string Email)
         {
-            return dataSql.LoadMyProductsBought(Email);
+            return dataSql.LoadMyProductsSupplied(Email);
         }
+
+        public object LoadMyProductsNotSupplied(string Email)
+        {
+            return dataSql.LoadMyProductsNotSupplied(Email);
+        }
+
         public object LoadProducts()
         {
             return dataSql.LoadProducts();

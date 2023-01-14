@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using RestSharp;
 using Newtonsoft.Json.Linq;
+using Tweetinvi;
 
 namespace PromoteIt.Server
 {
@@ -19,6 +20,7 @@ namespace PromoteIt.Server
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "Roles/{userID}")] HttpRequest req, string userID,
             ILogger log)
         {
+            
             string url = $"https://dev-8wgfmbfrqoc31nqm.us.auth0.com/api/v2/users/{userID}/roles";
             string requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
             var client = new RestClient(url);
