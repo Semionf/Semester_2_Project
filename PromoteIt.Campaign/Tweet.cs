@@ -18,16 +18,16 @@ namespace PromoteIt.Server
     {
         [FunctionName("Tweet")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "Tweet/{action}/{Email?}")] HttpRequest req, string action, string Email,
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "Tweet/{action}/{Email?}/{Text?}")] HttpRequest req, string action, string Email, string Text,
             ILogger log)
         {
-            string API_KEY = "4qg1fwOdYVkfvueFxJoxP3Ng9";
-            string API_KEY_SECRET = "BgBBIsbX8FvtSqrLFOo35ScbrDGaNosKZku0237AdxPQy5TQTB";
-            string ACCESS_TOKEN = "1605842591156785154-mOEo4nRvNqN7LSL3LAwPxPMuiQ9ly4";
-            string ACCESS_TOKEN_SECRET = "FfJlgsesXwNTfuzc4Ow5zeCsQ49BOspmY75rZGVqh8Lb6";
-            string BEARER_TOKEN = "AAAAAAAAAAAAAAAAAAAAAGXjlAEAAAAA%2BY4cDWiuTEfC572pTW%2FJQfQkPeM%3DiwGWjDCkxPhXeWHwwdDdBIDnIb0OmqwAMo2j0P05h3SOjhFnCc";
-            string CLIENT_ID = "Nm8tTEVKYmFTeU5HZVdSTngzS3k6MTpjaQ";
-            string CLIENT_SECRET = "TRLM__QwOtIvv88DD-tSD9mOkeo8ZPYRrUkibpWPmoB7JoVUWT";
+            string API_KEY = "R3wm5TQsjayCY7cQPjdNgWYBW";
+            string API_KEY_SECRET = "nl5HwSr9nGxHKHF2s6kTgotHSn3MU81XkYAiKmOyaSttFsCkPr";
+            string ACCESS_TOKEN = "1605842591156785154-4gG0DkrBGhfXAFp2FmxH7SRftyu9Rb";
+            string ACCESS_TOKEN_SECRET = "M5UmyJQr5OpShCkXx3UYy6tg6pSWcb4GfX93YBvRwZIMj";
+            string BEARER_TOKEN = "AAAAAAAAAAAAAAAAAAAAAJHvlAEAAAAApt7Ynj0IfozvLsMY82rTZO0nkR0%3DDDYhaKJJ63r1d9EdE8oLcKVuiBfPJbXxjAylZmstgJlTkuxF7y";
+            string CLIENT_ID = "UG5wN3FqMlJ5Tjg1OUJ0bENvczQ6MTpjaQ";
+            string CLIENT_SECRET = "IgxVa53q2Ppm_ybRFNp1AKjBroURJairEka_71yZmsy9kvogsc";
             log.LogInformation("C# HTTP trigger function processed a request.");
             var userClient = new TwitterClient(API_KEY, API_KEY_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET);
             var appCredentials = new ConsumerOnlyCredentials(API_KEY, API_KEY_SECRET)
@@ -35,13 +35,13 @@ namespace PromoteIt.Server
                 BearerToken = BEARER_TOKEN // bearer token is optional in some cases
             };
             var userCredentials = new TwitterCredentials(API_KEY, API_KEY_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET);
-            var userClient2 = new TwitterClient(appCredentials);
+            var userClient2 = new TwitterClient(userCredentials);
             var authenticatedUser = await userClient.Users.GetAuthenticatedUserAsync();
             Console.WriteLine("Hello " + authenticatedUser);
 
             // publish a tweet
-            var tweet = await userClient.Tweets.PublishTweetAsync("Hello tweetinvi world!");
-            Console.WriteLine("You published the tweet : " + tweet);
+            
+           
 
 
             string requestGetBody = "";
@@ -57,8 +57,22 @@ namespace PromoteIt.Server
                     requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
                     Model.myTweet myTweet = new Model.myTweet();
                     myTweet = System.Text.Json.JsonSerializer.Deserialize<Model.myTweet>(requestGetBody);
+                    
+                    if (myTweet.Quantity > 1)
+                    {
+                        var tweet = await userClient.Tweets.PublishTweetAsync($"User Email: {myTweet.Social_Activist_Email}  Bought :{myTweet.Quantity} {myTweet.Product_Name}s, To help {myTweet.Campaign_Hashtag} Success");
+                        myTweet.Text = tweet.ToString();
+                        Console.WriteLine("You published the tweet : " + tweet);
+                    }
+                    else
+                    {
+                            var tweet = await userClient.Tweets.PublishTweetAsync($"User Email: {myTweet.Social_Activist_Email}  Bought: {myTweet.Quantity} {myTweet.Product_Name}, To help {myTweet.Campaign_Hashtag} Success");
+                        myTweet.Text = tweet.ToString();
+                        Console.WriteLine("You published the tweet : " + tweet);
+                    }
                     MainManager.Instance.tweets.addTweet(myTweet);
                     break;
+               
                 case "GETALL":
                     requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
                     MainManager.Instance.InitTweets();

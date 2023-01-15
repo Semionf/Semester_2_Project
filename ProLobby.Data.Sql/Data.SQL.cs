@@ -44,9 +44,10 @@ namespace PromoteIt.Data.Sql
     {
         public void addTweet(myTweet tweet)
         {
-            string Query = string.Format($"if not exists(select * from Tweet where ID = {tweet.ID}) begin insert into Tweet (Social_Activist_Email, Campaign_Hashtag, Text, TimesTweeted) VALUES ('{tweet.Social_Activist_Email}', '{tweet.Campaign_Hashtag}', '{tweet.Text}', 1) end else begin update Tweet set TimesTweeted = TimesTweeted + 1 where ID = {tweet.ID} end update Social_Activist set MoneyEarned = MoneyEarned + 1 where Email = {tweet.Social_Activist_Email}");
+            string Query = string.Format($"if not exists(select * from Tweet where Text = '{tweet.Text}') begin insert into Tweet (Social_Activist_Email, Campaign_Hashtag, Text, TimesTweeted) VALUES ('{tweet.Social_Activist_Email}', '{tweet.Campaign_Hashtag}', '{tweet.Text}', 1) end else begin update Tweet set TimesTweeted = TimesTweeted + 1 where Text = '{tweet.Text}' and Social_Activist_Email = '{tweet.Social_Activist_Email}' end update Social_Activist set MoneyEarned = MoneyEarned + 1 where Email = '{tweet.Social_Activist_Email}'");
             SqlQuery.RunNonQuery(Query);
         }
+       
         public object LoadTweets()
         {
             {
@@ -56,7 +57,7 @@ namespace PromoteIt.Data.Sql
         public object LoadTweets(string Email)
         {
             {
-                return SqlQuery.RunCommandResult($"Select * from Tweet where Social_Activist_Email = {Email}", insertTweetsToHashTableFromDB);
+                return SqlQuery.RunCommandResult($"Select * from Tweet where Social_Activist_Email = '{Email}'", insertTweetsToHashTableFromDB);
             }
         }
         public object insertTweetsToHashTableFromDB(SqlDataReader reader)
@@ -91,13 +92,13 @@ namespace PromoteIt.Data.Sql
         }
         public void buyProduct(Product product)
         {
-            string Query = string.Format($"declare @Email nvarchar(40), @ID int select @Email = (select Business_Email from Donation where Name = '{product.Name}' and ID = {product.ID})\r\nif not exists(Select DonationID from Products_Bought where DonationID = {product.ID})\r\n\tbegin\r\n\t\tInsert into Products_Bought (Name, Quantity, Social_Activist_Email,\r\n\t\tBusiness_Email, DonationID, Price, Hashtag) Values ('{product.Name}',{product.Quantity},'{product.Activist_Email}',@Email,{product.ID},{product.Price}, '{product.CampaignHashtag}')\r\n\tend\r\nelse\r\n\tbegin\r\n\t\tUPDATE Products_Bought SET Quantity = Quantity + {product.Quantity}, Price = Price + {product.Price} where DonationID = {product.ID}\r\n\tend Update Donation Set Quantity = Quantity - {product.Quantity} where ID = {product.ID} Update Social_Activist SET MoneyEarned = MoneyEarned - {product.Price} where Email = '{product.Activist_Email}' select @ID = (Select ID from Products_Bought where DonationID = {product.ID})\r\n\tif not exists (select * from Supply where Products_Bought_ID = @ID) begin insert into Supply (Products_Bought_ID, IsSent) values(@ID,0) end DELETE FROM Donation\r\nWHERE Quantity = 0;");
+            string Query = string.Format($"declare @Email nvarchar(40), @ID int select @Email = (select Business_Email from Donation where Name = '{product.Name}' and ID = {product.ID})\r\nif not exists(Select DonationID from Products_Bought where DonationID = {product.ID} and Social_Activist_Email = '{product.Activist_Email}')\r\n\tbegin\r\n\t\tInsert into Products_Bought (Name, Quantity, Social_Activist_Email,\r\n\t\tBusiness_Email, DonationID, Price, Hashtag) Values ('{product.Name}',{product.Quantity},'{product.Activist_Email}',@Email,{product.ID},{product.Price}, '{product.CampaignHashtag}')\r\n\tend\r\nelse\r\n\tbegin\r\n\t\tUPDATE Products_Bought SET Quantity = Quantity + {product.Quantity}, Price = Price + {product.Price} where DonationID = {product.ID}\r\n\tend Update Donation Set Quantity = Quantity - {product.Quantity} where ID = {product.ID} Update Social_Activist SET MoneyEarned = MoneyEarned - {product.Price} where Email = '{product.Activist_Email}' select @ID = (Select ID from Products_Bought where DonationID = {product.ID} and Social_Activist_Email = '{product.Activist_Email}' )\r\n\tif not exists (select * from Supply where Products_Bought_ID = @ID) begin insert into Supply (Products_Bought_ID, IsSent) values(@ID,0) end");
             SqlQuery.RunNonQuery(Query);
         }
         public object LoadProducts(string Email)
         {
             {
-                return SqlQuery.RunCommandResult($"if exists(SELECT * FROM Donation WHERE Organization_Email = '{Email}')\r\nbegin\r\n\tselect * From Donation where Organization_Email in ('{Email}')\r\nend", insertDonatedToHashTableFromDB);
+                return SqlQuery.RunCommandResult($"if exists(SELECT * FROM Donation WHERE Organization_Email = '{Email}')\r\nbegin\r\n\tselect * From Donation where Organization_Email in ('{Email}') and Quantity <> 0\r\nend", insertDonatedToHashTableFromDB);
             }
         }
         public object LoadProductsBought(string Email)
@@ -121,7 +122,7 @@ namespace PromoteIt.Data.Sql
         public object LoadProducts()
         {
             {
-                return SqlQuery.RunCommandResult($"Select * from Donation", insertListToHashTableFromDB);
+                return SqlQuery.RunCommandResult($"Select * from Donation where Quantity <> 0", insertListToHashTableFromDB);
             }
         }
         public object insertBoughtToHashTableFromDB(SqlDataReader reader)

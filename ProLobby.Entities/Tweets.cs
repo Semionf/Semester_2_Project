@@ -14,6 +14,7 @@ namespace PromoteIt.Entities
         {
             dataSql.addTweet(tweet);
         }
+      
         public object LoadTweets()
         {
 
