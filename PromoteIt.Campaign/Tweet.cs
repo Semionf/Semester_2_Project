@@ -57,8 +57,12 @@ namespace PromoteIt.Server
                     requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
                     Model.myTweet myTweet = new Model.myTweet();
                     myTweet = System.Text.Json.JsonSerializer.Deserialize<Model.myTweet>(requestGetBody);
-                    
-                    if (myTweet.Quantity > 1)
+                    if (myTweet.Quantity == 0)
+                    {
+                        var tweet = await userClient.Tweets.PublishTweetAsync(myTweet.Text + myTweet.TimesTweeted);
+                        Console.WriteLine("You published the tweet : " + tweet);
+                    }
+                    else if (myTweet.Quantity > 1)
                     {
                         var tweet = await userClient.Tweets.PublishTweetAsync($"User Email: {myTweet.Social_Activist_Email}  Bought :{myTweet.Quantity} {myTweet.Product_Name}s, To help {myTweet.Campaign_Hashtag} Success");
                         myTweet.Text = tweet.ToString();
@@ -66,7 +70,7 @@ namespace PromoteIt.Server
                     }
                     else
                     {
-                            var tweet = await userClient.Tweets.PublishTweetAsync($"User Email: {myTweet.Social_Activist_Email}  Bought: {myTweet.Quantity} {myTweet.Product_Name}, To help {myTweet.Campaign_Hashtag} Success");
+                        var tweet = await userClient.Tweets.PublishTweetAsync($"User Email: {myTweet.Social_Activist_Email}  Bought: {myTweet.Quantity} {myTweet.Product_Name}, To help {myTweet.Campaign_Hashtag} Success");
                         myTweet.Text = tweet.ToString();
                         Console.WriteLine("You published the tweet : " + tweet);
                     }
