@@ -25,17 +25,10 @@ namespace PromoteIt.Server
             string API_KEY_SECRET = "nl5HwSr9nGxHKHF2s6kTgotHSn3MU81XkYAiKmOyaSttFsCkPr";
             string ACCESS_TOKEN = "1605842591156785154-4gG0DkrBGhfXAFp2FmxH7SRftyu9Rb";
             string ACCESS_TOKEN_SECRET = "M5UmyJQr5OpShCkXx3UYy6tg6pSWcb4GfX93YBvRwZIMj";
-            string BEARER_TOKEN = "AAAAAAAAAAAAAAAAAAAAAJHvlAEAAAAApt7Ynj0IfozvLsMY82rTZO0nkR0%3DDDYhaKJJ63r1d9EdE8oLcKVuiBfPJbXxjAylZmstgJlTkuxF7y";
-            string CLIENT_ID = "UG5wN3FqMlJ5Tjg1OUJ0bENvczQ6MTpjaQ";
-            string CLIENT_SECRET = "IgxVa53q2Ppm_ybRFNp1AKjBroURJairEka_71yZmsy9kvogsc";
+
             log.LogInformation("C# HTTP trigger function processed a request.");
             var userClient = new TwitterClient(API_KEY, API_KEY_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET);
-            var appCredentials = new ConsumerOnlyCredentials(API_KEY, API_KEY_SECRET)
-            {
-                BearerToken = BEARER_TOKEN // bearer token is optional in some cases
-            };
-            var userCredentials = new TwitterCredentials(API_KEY, API_KEY_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET);
-            var userClient2 = new TwitterClient(userCredentials);
+           
             var authenticatedUser = await userClient.Users.GetAuthenticatedUserAsync();
             Console.WriteLine("Hello " + authenticatedUser);
 
