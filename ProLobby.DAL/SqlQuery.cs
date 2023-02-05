@@ -10,7 +10,8 @@ namespace PromoteIt.DAL
     public class SqlQuery
     {
         public delegate void SetDataReader_delegate(SqlDataReader reader);
-        public delegate object SetResulrDataReader_delegate(SqlDataReader reader);
+        public delegate Dictionary<int, object> SetResulrDataReader_delegate(SqlDataReader reader);
+        public delegate int SetResulrDataReader_delegateInt(SqlDataReader reader);
         private static string connectionString = "Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=PromoteIt;Data Source=MSI\\SQLEXPRESS";
         public static void RunCommand(string sqlQuery, SetDataReader_delegate func)
         {
@@ -29,71 +30,179 @@ namespace PromoteIt.DAL
                     }
                 }
             }
-            
+
         }
         public static string RunCommandCheck(string sqlQuery, string Email)
         {
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            try
             {
-                string answer;
-                string queryString = sqlQuery;
-
-
-                // Adapter
-
-                connection.Open();
-                
-                using (SqlCommand command = new SqlCommand(queryString, connection))
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    command.Parameters.AddWithValue("@email", Email);
-                    answer = command.ExecuteScalar().ToString();
-                    command.ExecuteNonQuery();
-                }
+                    string answer = "";
+                    string queryString = sqlQuery;
 
-                return answer;
-            }
 
-        }
-        public static object RunCommandResult(string sqlQuery, SetResulrDataReader_delegate func)
-        {
-            object ret = null;
+                    // Adapter
 
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-
-                string queryString = sqlQuery;
-
-                // Adapter
-                using (SqlCommand command = new SqlCommand(queryString, connection))
-                {
                     connection.Open();
-                    //Reader
-                    using (SqlDataReader reader = command.ExecuteReader())
+
+                    using (SqlCommand command = new SqlCommand(queryString, connection))
                     {
-                        ret = func(reader);
+                        try
+                        {
+                            command.Parameters.AddWithValue("@email", Email);
+                            answer = command.ExecuteScalar().ToString();
+                            command.ExecuteNonQuery();
+                        }catch(Exception ex)
+                        {
+
+                        }
                     }
+                    return answer;
                 }
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+        public static Dictionary<int, object> RunCommandResult(string sqlQuery, SetResulrDataReader_delegate func)
+        {
+            Dictionary<int, object> ret = null;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+
+                    string queryString = sqlQuery;
+
+                    // Adapter
+                    using (SqlCommand command = new SqlCommand(queryString, connection))
+                    {
+                        connection.Open();
+                        //Reader
+                        try
+                        {
+                            using (SqlDataReader reader = command.ExecuteReader())
+                            {
+                                ret = func(reader);
+                            }
+                        }catch(Exception ex)
+                        {
+
+                        }
+                        
+                    }
+
+                }
+            }catch(Exception ex)
+            {
 
             }
+            return ret;
+        }
+        public static Dictionary<int, object> RunCommandResultTweet(string sqlQuery, SetResulrDataReader_delegate func)
+        {
+            Dictionary<int, object> ret = null;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
 
+                    string queryString = sqlQuery;
+
+                    // Adapter
+                    using (SqlCommand command = new SqlCommand(queryString, connection))
+                    {
+                        connection.Open();
+                        //Reader
+                        try
+                        {
+                            using (SqlDataReader reader = command.ExecuteReader())
+                            {
+                                ret = func(reader);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return ret;
+        }
+        public static int RunCommandResultInt(string sqlQuery, SetResulrDataReader_delegateInt func)
+        {
+            int ret = 0;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+
+                    string queryString = sqlQuery;
+
+                    // Adapter
+                    using (SqlCommand command = new SqlCommand(queryString, connection))
+                    {
+                        connection.Open();
+                        //Reader
+                        try
+                        {
+                            using (SqlDataReader reader = command.ExecuteReader())
+                            {
+                                ret = func(reader);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
             return ret;
         }
         public static void RunNonQuery(string sqlQuery)
         {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
 
-            using (SqlConnection connection = new SqlConnection(connectionString))
+                    string queryString = sqlQuery;
+
+                    // Adapter
+                    using (SqlCommand command = new SqlCommand(queryString, connection))
+                    {
+                        connection.Open();
+                        try
+                        {
+                            command.ExecuteNonQuery();
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+
+                    }
+                }
+            }
+            catch (Exception ex)
             {
 
-                string queryString = sqlQuery;
-
-                // Adapter
-                using (SqlCommand command = new SqlCommand(queryString, connection))
-                {
-                    connection.Open();
-                    //Reader
-                    command.ExecuteNonQuery();
-
-                }
             }
         }
     }

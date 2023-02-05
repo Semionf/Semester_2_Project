@@ -23,7 +23,13 @@ namespace PromoteIt.Server
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             
             Model.UserMessage message = new Model.UserMessage();
-            message = System.Text.Json.JsonSerializer.Deserialize<Model.UserMessage>(requestBody);
+            try
+            {
+                message = System.Text.Json.JsonSerializer.Deserialize<Model.UserMessage>(requestBody);
+            }catch(Exception ex)
+            {
+
+            }
             MainManager.Instance.messages.addMessage(message);
             return null;
         }

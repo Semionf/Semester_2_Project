@@ -23,25 +23,25 @@ namespace PromoteIt.Entities
         {
             dataSql.buyProduct(product);
         }
-        public object LoadProducts(string Email)
+        public Dictionary<int, object> LoadProducts(string Email)
         {
             return dataSql.LoadProducts(Email);
         }
-        public object LoadProductsBought(string Email)
+        public Dictionary<int, object> LoadProductsBought(string Email)
         {
             return dataSql.LoadProductsBought(Email);
         }
-        public object LoadMyProductsSupplied(string Email)
+        public Dictionary<int, object> LoadMyProductsSupplied(string Email)
         {
             return dataSql.LoadMyProductsSupplied(Email);
         }
 
-        public object LoadMyProductsNotSupplied(string Email)
+        public Dictionary<int, object> LoadMyProductsNotSupplied(string Email)
         {
             return dataSql.LoadMyProductsNotSupplied(Email);
         }
 
-        public object LoadProducts()
+        public Dictionary<int, object> LoadProducts()
         {
             return dataSql.LoadProducts();
         }

@@ -15,12 +15,12 @@ namespace PromoteIt.Entities
             dataSql.addTweet(tweet);
         }
       
-        public object LoadTweets()
+        public Dictionary<int, object> LoadTweets()
         {
 
             return dataSql.LoadTweets();
         }
-        public object LoadTweets(string Email)
+        public Dictionary<int, object> LoadTweets(string Email)
         {
 
             return dataSql.LoadTweets(Email);

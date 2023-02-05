@@ -1,4 +1,5 @@
 ﻿
+using ProLobby.Entities;
 using PromoteIt.Data.Sql;
 using PromoteIt.Model;
 using System;
@@ -21,52 +22,59 @@ namespace PromoteIt.Entities
         private static MainManager _Instance = new MainManager();
         public static MainManager Instance { get { return _Instance; } }
         private MainManager() { }
-        public Hashtable campaignsList = new Hashtable();
-        public Hashtable productsList = new Hashtable();
-        public Hashtable usersList = new Hashtable();
-        public Hashtable tweetsList = new Hashtable();
+        public Dictionary<int, object> campaignsList = new Dictionary<int, object>();
+        public Dictionary<int, object> productsList = new Dictionary<int, object>();
+        public Dictionary<int, object> usersList = new Dictionary<int, object>();
+        public Dictionary<int, object> tweetsList = new Dictionary<int, object>();
         public UserMessage message = new UserMessage();
+
+        public MyQueue MyQueue;
+        public void Init()
+        {
+            MyQueue = new MyQueue();
+        }
+
         public void InitCampaign(string Email)
         {
-            campaignsList = (Hashtable)campaigns.LoadCampaigns(Email);
+            campaignsList = campaigns.LoadCampaigns(Email);
         }
         public void InitCampaign()
         {
-            campaignsList = (Hashtable)campaigns.LoadCampaigns();
+            campaignsList = campaigns.LoadCampaigns();
         }
      
         public void InitProducts(string Email)
         {
-            productsList = (Hashtable)products.LoadProducts(Email);
+            productsList = products.LoadProducts(Email);
         }
 
         public void InitMyProductsSupplied(string Email)
         {
-            productsList = (Hashtable)products.LoadMyProductsSupplied(Email);
+            productsList = products.LoadMyProductsSupplied(Email);
         }
         public void InitMyProductsNotSupplied(string Email)
         {
-            productsList = (Hashtable)products.LoadMyProductsNotSupplied(Email);
+            productsList = products.LoadMyProductsNotSupplied(Email);
         }
         public void InitProductsBought(string Email)
         {
-            productsList = (Hashtable)products.LoadProductsBought(Email);
+            productsList = products.LoadProductsBought(Email);
         }
         public void InitProducts()
         {
-            productsList = (Hashtable)products.LoadProducts();
+            productsList = products.LoadProducts();
         }
         public void InitUsers()
         {
-            usersList = (Hashtable)users.LoadUsers();
+            usersList = users.LoadUsers();
         }
         public void InitTweets()
         {
-            tweetsList = (Hashtable)tweets.LoadTweets();
+            tweetsList = tweets.LoadTweets();
         }
         public void InitTweets(string Email)
         {
-            tweetsList = (Hashtable)tweets.LoadTweets(Email);
+            tweetsList = tweets.LoadTweets(Email);
         }
         public void getBalance(string Email)
         {

@@ -28,52 +28,97 @@ namespace PromoteIt.Server
 
             log.LogInformation("C# HTTP trigger function processed a request.");
             var userClient = new TwitterClient(API_KEY, API_KEY_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET);
-           
+
             var authenticatedUser = await userClient.Users.GetAuthenticatedUserAsync();
             Console.WriteLine("Hello " + authenticatedUser);
 
             // publish a tweet
-            
-           
 
 
-            string requestGetBody = "";
+
+
+            string requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
             switch (action)
             {
 
                 case "GET":
-                    requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
                     MainManager.Instance.InitTweets(Email);
-                    return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.tweetsList));
+                    try
+                    {
+                        return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.tweetsList));
+                    }
+                    catch (Exception ex)
+                    {
 
+                       
+                    }
+                    break ;
+                  
                 case "POST":
-                    requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
                     Model.myTweet myTweet = new Model.myTweet();
-                    myTweet = System.Text.Json.JsonSerializer.Deserialize<Model.myTweet>(requestGetBody);
+                    try
+                    {
+                        myTweet = System.Text.Json.JsonSerializer.Deserialize<Model.myTweet>(requestGetBody);
+                    }
+                    catch (Exception ex)
+                    {
+
+                        break;
+                    }
                     if (myTweet.Quantity == 0)
                     {
-                        var tweet = await userClient.Tweets.PublishTweetAsync(myTweet.Text + myTweet.TimesTweeted);
-                        Console.WriteLine("You published the tweet : " + tweet);
+                        try
+                        {
+                            var tweet = await userClient.Tweets.PublishTweetAsync(myTweet.Text + myTweet.TimesTweeted);
+                            Console.WriteLine("You published the tweet : " + tweet);
+                        }
+                        catch (Exception ex)
+                        {
+
+                            break;
+                        }
                     }
                     else if (myTweet.Quantity > 1)
                     {
-                        var tweet = await userClient.Tweets.PublishTweetAsync($"User Email: {myTweet.Social_Activist_Email}  Bought :{myTweet.Quantity} {myTweet.Product_Name}s, To help {myTweet.Campaign_Hashtag} Success");
-                        myTweet.Text = tweet.ToString();
-                        Console.WriteLine("You published the tweet : " + tweet);
+                        try
+                        {
+                            var tweet = await userClient.Tweets.PublishTweetAsync($"User Email: {myTweet.Social_Activist_Email}  Bought :{myTweet.Quantity} {myTweet.Product_Name}s, To help {myTweet.Campaign_Hashtag} Success");
+                            myTweet.Text = tweet.ToString();
+                            Console.WriteLine("You published the tweet : " + tweet);
+                        }
+                        catch (Exception ex) 
+                        {
+                            break; 
+                        }
                     }
                     else
                     {
-                        var tweet = await userClient.Tweets.PublishTweetAsync($"User Email: {myTweet.Social_Activist_Email}  Bought: {myTweet.Quantity} {myTweet.Product_Name}, To help {myTweet.Campaign_Hashtag} Success");
-                        myTweet.Text = tweet.ToString();
-                        Console.WriteLine("You published the tweet : " + tweet);
+                        try
+                        {
+                            var tweet = await userClient.Tweets.PublishTweetAsync($"User Email: {myTweet.Social_Activist_Email}  Bought: {myTweet.Quantity} {myTweet.Product_Name}, To help {myTweet.Campaign_Hashtag} Success");
+                            myTweet.Text = tweet.ToString();
+                            Console.WriteLine("You published the tweet : " + tweet);
+                        }
+                        catch (Exception)
+                        {
+
+                            break;
+                        }
                     }
                     MainManager.Instance.tweets.addTweet(myTweet);
                     break;
-               
+
                 case "GETALL":
-                    requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
                     MainManager.Instance.InitTweets();
-                    return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.tweetsList));
+                    try
+                    {
+                        return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.tweetsList));
+                    }
+                    catch (Exception ex)
+                    {
+
+                        break;
+                    }  
                 default:
                     break;
             }

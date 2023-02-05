@@ -1,0 +1,2 @@
+C:\Users\sfurl\source\repos\PromoteIt\ProLobby.Entities\obj\Release\PromoteIt.Entities.csproj.AssemblyReference.cache
+C:\Users\sfurl\source\repos\PromoteIt\ProLobby.Entities\obj\Release\PromoteIt.Entities.csproj.CoreCompileInputs.cache

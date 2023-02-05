@@ -1,0 +1,2 @@
+C:\Users\sfurl\source\repos\PromoteIt\ProLobby.Data.Sql\obj\Release\PromoteIt.Data.Sql.csproj.AssemblyReference.cache
+C:\Users\sfurl\source\repos\PromoteIt\ProLobby.Data.Sql\obj\Release\PromoteIt.Data.Sql.csproj.CoreCompileInputs.cache

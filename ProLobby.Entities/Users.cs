@@ -15,16 +15,15 @@ namespace PromoteIt.Entities
         {
             dataSql.addUser(user);
         }
-        public object LoadUsers()
+        public Dictionary<int, object> LoadUsers()
         {
-
             return dataSql.LoadUsers();
         }
         public int LoadBalance(string Email)
         {
-            return (int)dataSql.LoadBalance(Email);
+            return dataSql.LoadBalance(Email);
         }
-        public object checkUser(string email)
+        public bool checkUser(string email)
         {
             return dataSql.checkUser(email);
         }

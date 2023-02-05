@@ -1,0 +1,2 @@
+C:\Users\sfurl\source\repos\PromoteIt\ProLobby.DAL\obj\Release\PromoteIt.DAL.csproj.AssemblyReference.cache
+C:\Users\sfurl\source\repos\PromoteIt\ProLobby.DAL\obj\Release\PromoteIt.DAL.csproj.CoreCompileInputs.cache

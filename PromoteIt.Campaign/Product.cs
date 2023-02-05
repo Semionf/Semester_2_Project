@@ -23,7 +23,7 @@ namespace PromoteIt.Server
             string requestGetBody = "";
             switch (action)
             {
-                
+               
                 case"BUSINESS":
                     requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
                     MainManager.Instance.InitProductsBought(Email);

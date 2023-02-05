@@ -111,6 +111,7 @@
   <ItemGroup>
     <Compile Include="Business_Company.cs" />
     <Compile Include="Campaign.cs" />
+    <Compile Include="LogItem.cs" />
     <Compile Include="Non_Profit.cs" />
     <Compile Include="Product.cs" />
     <Compile Include="Product_Bought.cs" />

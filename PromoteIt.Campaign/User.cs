@@ -15,36 +15,90 @@ namespace PromoteIt.Server
     {
         [FunctionName("User")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "User/{action}/{Email?}")] HttpRequest req, string action, string Email, 
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "User/{action}/{Email?}")] HttpRequest req, string action, string Email,
             ILogger log)
         {
             string requestGetBody = "";
             switch (action)
             {
                 case "GET":
-                    requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
-                    MainManager.Instance.InitUsers();
-                    return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.usersList));
+                    try
+                    {
+                        requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
+                    }
+                    catch (Exception ex)
+                    {
 
+                        break;
+                    }
+                    MainManager.Instance.InitUsers();
+                    try
+                    {
+                        return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.usersList));
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                    break;
                 case "POST":
-                    requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
+                    try
+                    {
+                        requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
+                    }
+                    catch(Exception ex)
+                    {
+
+                    }
                     Model.myUser user = new Model.myUser();
-                    user = System.Text.Json.JsonSerializer.Deserialize<Model.myUser>(requestGetBody);
+                    try
+                    {
+                        user = System.Text.Json.JsonSerializer.Deserialize<Model.myUser>(requestGetBody);
+                    }catch(Exception ex)
+                    {
+                        break;
+                    }
                     MainManager.Instance.users.addUser(user);
                     break;
                 case "CHECK":
-                    requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
-                    return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.users.checkUser(Email)));
-                case "BALANCE":
-                    requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
-                    MainManager.Instance.getBalance(Email);
-                    return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.UserBalance));
+                    try
+                    {
+                        requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
+                    }catch(Exception ex)
+                    {
 
+                        break;
+                    }
+                    try
+                    {
+                        return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.users.checkUser(Email)));
+                    }catch(Exception ex)
+                    {
+
+                    }
+                    break;
+                case "BALANCE":
+                    try
+                    {
+                        requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
+                    }catch(Exception ex)
+                    {
+
+                    }
+                    MainManager.Instance.getBalance(Email);
+                    try
+                    {
+                        return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.UserBalance));
+                    }catch(Exception ex)
+                    {
+
+                    }
+                    break;
                 default:
                     break;
             }
             return null;
         }
     }
-    
+
 }

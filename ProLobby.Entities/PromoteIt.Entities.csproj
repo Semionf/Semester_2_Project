@@ -111,6 +111,7 @@
   <ItemGroup>
     <Compile Include="Campaigns.cs" />
     <Compile Include="MainManager.cs" />
+    <Compile Include="MyQueue.cs" />
     <Compile Include="Non_Profities.cs" />
     <Compile Include="Products.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
