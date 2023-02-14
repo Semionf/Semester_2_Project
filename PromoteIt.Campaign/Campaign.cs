@@ -7,9 +7,11 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using PromoteIt.Entities;
+
 using PromoteIt.Model;
 using static System.Collections.Specialized.BitVector32;
+using PromoteIt.Entities.ICommand;
+using PromoteIt.Entities;
 
 namespace PromoteIt.Campaign
 {
@@ -21,25 +23,30 @@ namespace PromoteIt.Campaign
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
-            string requestBody;
-            switch (action)
+            ICommand command = CommandManager.Instance.CampaignCommand[action];
+            try
             {
-                case "GET":
-                    MainManager.Instance.InitCampaign(Email);
-                    return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.campaignsList));
+                string requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
+                switch (action)
+                {
+                    case "GET":
+                        
+                        return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.campaignsList));
 
-                case "POST":
-                    requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-                    PromoteIt.Model.Campaign campaign = new PromoteIt.Model.Campaign();
-                    campaign = System.Text.Json.JsonSerializer.Deserialize<PromoteIt.Model.Campaign>(requestBody);
-                    MainManager.Instance.campaigns.addCampaign(campaign);
-                    break;
-                case "LOAD":
-                    requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-                    MainManager.Instance.InitCampaign();
-                    return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.campaignsList));
-                default:
-                    break;
+                    case "POST":
+
+                        break;
+                    case "LOAD":
+                        MainManager.Instance.InitCampaign();
+                        MainManager.Instance.Logger.AddToLog(new LogItem { Type = "Event", Message = "Getting all campaigns!"});
+                        return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.campaignsList));
+                    default:
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                MainManager.Instance.Logger.AddToLog(new LogItem { exception = ex });
             }
             return null;
         }

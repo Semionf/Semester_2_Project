@@ -1,15 +1,30 @@
-﻿using ProLobby.Model;
+﻿using PromoteIt.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Utilities;
 
-namespace ProLobby.Entities
+namespace PromoteIt.Entities
 {
     public class MyQueue
     {
-        private Queue<LogItem> myQueue = new Queue<LogItem>();
+        public MyQueue() {
+            Task.Run(() =>
+        {
+            while (true)
+            {
+                if (myQueue.Count > 0)
+                {
+                    LogItem item = myQueue.Dequeue();
+
+                }
+            }
+        });
+        }
+        
+        public static Queue<LogItem> myQueue = new Queue<LogItem>();
 
         public LogItem Pop()
         {
@@ -19,7 +34,7 @@ namespace ProLobby.Entities
 
         public void Push(LogItem newItem)
         {
-            this.myQueue.Enqueue(newItem);
+            myQueue.Enqueue(newItem);
         }
     }
 }

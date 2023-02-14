@@ -1,0 +1,5 @@
+C:\Users\sfurl\source\repos\Semester_2_Project_Server\MyICommand\obj\Debug\net6.0\MyICommand.csproj.AssemblyReference.cache
+C:\Users\sfurl\source\repos\Semester_2_Project_Server\MyICommand\obj\Debug\net6.0\MyICommand.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\sfurl\source\repos\Semester_2_Project_Server\MyICommand\obj\Debug\net6.0\MyICommand.AssemblyInfoInputs.cache
+C:\Users\sfurl\source\repos\Semester_2_Project_Server\MyICommand\obj\Debug\net6.0\MyICommand.AssemblyInfo.cs
+C:\Users\sfurl\source\repos\Semester_2_Project_Server\MyICommand\obj\Debug\net6.0\MyICommand.csproj.CoreCompileInputs.cache

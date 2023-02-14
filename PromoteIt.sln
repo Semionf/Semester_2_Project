@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PromoteIt.Data.Sql", "ProLo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PromoteIt.Server", "PromoteIt.Campaign\PromoteIt.Server.csproj", "{C61C25ED-AEB9-4D60-AEE5-47893E26A0A3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyUtilities", "..\MyProvider\MyUtilities\MyUtilities.csproj", "{92403615-B0E9-42C2-AEEA-0EABCF050F87}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{C61C25ED-AEB9-4D60-AEE5-47893E26A0A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C61C25ED-AEB9-4D60-AEE5-47893E26A0A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C61C25ED-AEB9-4D60-AEE5-47893E26A0A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92403615-B0E9-42C2-AEEA-0EABCF050F87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92403615-B0E9-42C2-AEEA-0EABCF050F87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92403615-B0E9-42C2-AEEA-0EABCF050F87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92403615-B0E9-42C2-AEEA-0EABCF050F87}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

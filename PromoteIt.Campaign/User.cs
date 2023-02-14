@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using PromoteIt.Entities;
-
+using MyUtilities;
 namespace PromoteIt.Server
 {
     public static class User
@@ -18,84 +18,38 @@ namespace PromoteIt.Server
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "User/{action}/{Email?}")] HttpRequest req, string action, string Email,
             ILogger log)
         {
-            string requestGetBody = "";
-            switch (action)
+            try
             {
-                case "GET":
-                    try
-                    {
-                        requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
-                    }
-                    catch (Exception ex)
-                    {
-
-                        break;
-                    }
-                    MainManager.Instance.InitUsers();
-                    try
-                    {
+                string requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
+                switch (action)
+                {
+                    case "GET":
+                        MainManager.Instance.InitUsers();
+                        MainManager.Instance.Logger.AddToLog(new LogItem { Type = "Event", Message = "Users list loaded!" });
                         return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.usersList));
-                    }
-                    catch (Exception ex)
-                    {
-
-                    }
-                    break;
-                case "POST":
-                    try
-                    {
-                        requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
-                    }
-                    catch(Exception ex)
-                    {
-
-                    }
-                    Model.myUser user = new Model.myUser();
-                    try
-                    {
+                        break;
+                    case "POST":
+                        Model.myUser user = new Model.myUser();
                         user = System.Text.Json.JsonSerializer.Deserialize<Model.myUser>(requestGetBody);
-                    }catch(Exception ex)
-                    {
+                        MainManager.Instance.users.addUser(user);
+                        MainManager.Instance.Logger.AddToLog(new LogItem { Type = "Event", Message = "Added new user to the system!" });
                         break;
-                    }
-                    MainManager.Instance.users.addUser(user);
-                    break;
-                case "CHECK":
-                    try
-                    {
-                        requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
-                    }catch(Exception ex)
-                    {
-
-                        break;
-                    }
-                    try
-                    {
+                    case "CHECK":
+                        MainManager.Instance.Logger.AddToLog(new LogItem { Type = "Event", Message = "Checking if user exists in the DB" });
                         return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.users.checkUser(Email)));
-                    }catch(Exception ex)
-                    {
-
-                    }
-                    break;
-                case "BALANCE":
-                    try
-                    {
-                        requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
-                    }catch(Exception ex)
-                    {
-
-                    }
-                    MainManager.Instance.getBalance(Email);
-                    try
-                    {
+                        break;
+                    case "BALANCE":
+                        MainManager.Instance.getBalance(Email);
+                        MainManager.Instance.Logger.AddToLog(new LogItem { Type = "Event", Message = "Getting balance of a user!" });
                         return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.UserBalance));
-                    }catch(Exception ex)
-                    {
-
-                    }
-                    break;
-                default:
-                    break;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                MainManager.Instance.Logger.AddToLog(new LogItem { exception = ex });
             }
             return null;
         }

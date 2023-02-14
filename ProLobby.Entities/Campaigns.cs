@@ -6,12 +6,18 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Utilities;
 
 namespace PromoteIt.Entities
 {
-    public class Campaigns
+    public class Campaigns: BaseEntity
     {
         private static Data.Sql.Campaigns dataSql = new Data.Sql.Campaigns();
+
+        public Campaigns(Logger log) : base(log)
+        {
+        }
+
         public Dictionary<int,object> LoadCampaigns(string Email)
         {
             return dataSql.LoadCampaigns(Email);

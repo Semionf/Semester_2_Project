@@ -1,0 +1,18 @@
+12/2/2023 - 0:1:23 - Getting balance of a user!
+12/2/2023 - 0:2:24 - A user logged in!
+12/2/2023 - 0:2:25 - Checking if user exists in the DB
+12/2/2023 - 0:2:28 - Getting all products!
+12/2/2023 - 0:2:28 - Getting balance of a user!
+12/2/2023 - 0:2:29 - List of products supplied for user: activist@gmail.com
+12/2/2023 - 0:2:29 - List of products not supplied for user: activist@gmail.com
+12/2/2023 - 00:11:49 - A user logged in!
+12/2/2023 - 00:13:38 - A user logged in!
+12/2/2023 - 00:13:40 - Checking if user exists in the DB
+12/2/2023 - 00:13:42 - Getting campaigns of organization: nonprofit@gmail.com
+12/2/2023 - 00:18:39 - Getting products donated to organization: nonprofit@gmail.com
+12/2/2023 - 00:18:45 - Getting campaigns of organization: nonprofit@gmail.com
+12/2/2023 - 00:19:39 - Getting products donated to organization: nonprofit@gmail.com
+12/2/2023 - 00:21:05 - A user logged in!
+12/2/2023 - 00:21:07 - Checking if user exists in the DB
+12/2/2023 - 00:21:10 - Getting products donated to organization: nonprofit@gmail.com
+12/2/2023 - 00:21:11 - Getting campaigns of organization: nonprofit@gmail.com

@@ -6,10 +6,9 @@ using System.Data.SqlTypes;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PromoteIt.DAL;
 using PromoteIt.Model;
 using Tweetinvi.Core.Models;
-
+using PromoteIt.DAL;
 namespace PromoteIt.Data.Sql
 {
 

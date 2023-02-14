@@ -5,12 +5,18 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Utilities;
 
 namespace PromoteIt.Entities
 {
-    public class Users
+    public class Users:BaseEntity
     {
         PromoteIt.Data.Sql.Users dataSql = new PromoteIt.Data.Sql.Users();
+        
+        public Users(Logger log) : base(log)
+        {
+        }
+        
         public void addUser(myUser user)
         {
             dataSql.addUser(user);

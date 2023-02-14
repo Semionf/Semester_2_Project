@@ -11,7 +11,9 @@ using Tweetinvi;
 using static System.Collections.Specialized.BitVector32;
 using PromoteIt.Entities;
 using Tweetinvi.Models;
+using PromoteIt.Model;
 
+using MyUtilities;
 namespace PromoteIt.Server
 {
     public static class Tweet
@@ -21,108 +23,75 @@ namespace PromoteIt.Server
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "Tweet/{action}/{Email?}/{Text?}")] HttpRequest req, string action, string Email, string Text,
             ILogger log)
         {
-            string API_KEY = "R3wm5TQsjayCY7cQPjdNgWYBW";
-            string API_KEY_SECRET = "nl5HwSr9nGxHKHF2s6kTgotHSn3MU81XkYAiKmOyaSttFsCkPr";
-            string ACCESS_TOKEN = "1605842591156785154-4gG0DkrBGhfXAFp2FmxH7SRftyu9Rb";
-            string ACCESS_TOKEN_SECRET = "M5UmyJQr5OpShCkXx3UYy6tg6pSWcb4GfX93YBvRwZIMj";
-
-            log.LogInformation("C# HTTP trigger function processed a request.");
-            var userClient = new TwitterClient(API_KEY, API_KEY_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET);
-
-            var authenticatedUser = await userClient.Users.GetAuthenticatedUserAsync();
-            Console.WriteLine("Hello " + authenticatedUser);
-
-            // publish a tweet
-
-
-
-
-            string requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
-            switch (action)
+            try
             {
+                string API_KEY = Environment.GetEnvironmentVariable("API_KEY"); 
+                string API_KEY_SECRET = Environment.GetEnvironmentVariable("API_KEY_SECRET"); 
+                string ACCESS_TOKEN = Environment.GetEnvironmentVariable("ACCESS_TOKEN"); 
+                string ACCESS_TOKEN_SECRET = Environment.GetEnvironmentVariable("ACCESS_TOKEN_SECRET");
+                string Twitter_Bearer = Environment.GetEnvironmentVariable("Twitter_Bearer");
+                log.LogInformation("C# HTTP trigger function processed a request.");
+                var userClient = new TwitterClient(API_KEY, API_KEY_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET);
 
-                case "GET":
-                    MainManager.Instance.InitTweets(Email);
-                    try
-                    {
+                var authenticatedUser = await userClient.Users.GetAuthenticatedUserAsync();
+                Console.WriteLine("Hello " + authenticatedUser);
+
+                string requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
+                switch (action)
+                {
+
+                    case "GET":
+                        MainManager.Instance.InitTweets(Email);
+                        MainManager.Instance.Logger.AddToLog(new LogItem { Type = "Event", Message = $"Getting tweets of the user: {Email}" });
                         return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.tweetsList));
-                    }
-                    catch (Exception ex)
-                    {
-
-                       
-                    }
-                    break ;
-                  
-                case "POST":
-                    Model.myTweet myTweet = new Model.myTweet();
-                    try
-                    {
-                        myTweet = System.Text.Json.JsonSerializer.Deserialize<Model.myTweet>(requestGetBody);
-                    }
-                    catch (Exception ex)
-                    {
-
                         break;
-                    }
-                    if (myTweet.Quantity == 0)
-                    {
-                        try
+
+                    case "POST":
+                        Model.myTweet myTweet = new Model.myTweet();
+                        myTweet = System.Text.Json.JsonSerializer.Deserialize<Model.myTweet>(requestGetBody);
+                        if (myTweet.Quantity == 0)
                         {
+
                             var tweet = await userClient.Tweets.PublishTweetAsync(myTweet.Text + myTweet.TimesTweeted);
                             Console.WriteLine("You published the tweet : " + tweet);
+
+                            MainManager.Instance.Logger.AddToLog(new LogItem { Type = "Event", Message = "A user retweeted!" });
                         }
-                        catch (Exception ex)
+                        else if (myTweet.Quantity > 1)
                         {
 
-                            break;
-                        }
-                    }
-                    else if (myTweet.Quantity > 1)
-                    {
-                        try
-                        {
                             var tweet = await userClient.Tweets.PublishTweetAsync($"User Email: {myTweet.Social_Activist_Email}  Bought :{myTweet.Quantity} {myTweet.Product_Name}s, To help {myTweet.Campaign_Hashtag} Success");
                             myTweet.Text = tweet.ToString();
                             Console.WriteLine("You published the tweet : " + tweet);
+                            MainManager.Instance.Logger.AddToLog(new LogItem { Type = "Event", Message = "New Tweet posted!" });
                         }
-                        catch (Exception ex) 
+                        else
                         {
-                            break; 
-                        }
-                    }
-                    else
-                    {
-                        try
-                        {
+
                             var tweet = await userClient.Tweets.PublishTweetAsync($"User Email: {myTweet.Social_Activist_Email}  Bought: {myTweet.Quantity} {myTweet.Product_Name}, To help {myTweet.Campaign_Hashtag} Success");
                             myTweet.Text = tweet.ToString();
                             Console.WriteLine("You published the tweet : " + tweet);
+                            MainManager.Instance.Logger.AddToLog(new LogItem { Type = "Event", Message = "New Tweet posted!" });
                         }
-                        catch (Exception)
-                        {
-
-                            break;
-                        }
-                    }
-                    MainManager.Instance.tweets.addTweet(myTweet);
-                    break;
-
-                case "GETALL":
-                    MainManager.Instance.InitTweets();
-                    try
-                    {
-                        return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.tweetsList));
-                    }
-                    catch (Exception ex)
-                    {
-
+                        MainManager.Instance.tweets.addTweet(myTweet);
                         break;
-                    }  
-                default:
-                    break;
+
+                    case "GETALL":
+                        MainManager.Instance.InitTweets();
+                        MainManager.Instance.Logger.AddToLog(new LogItem { Type = "Event", Message = "Getting all tweets from all users!" });
+                        return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.tweetsList));
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                MainManager.Instance.Logger.AddToLog(new LogItem { exception = ex });
             }
             return null;
         }
     }
 }
+

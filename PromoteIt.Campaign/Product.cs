@@ -6,11 +6,9 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using PromoteIt.Entities;
-using PromoteIt.Model;
-using Tweetinvi;
-
+using MyUtilities;
+using PromoteIt.Entities.ICommand;
 namespace PromoteIt.Server
 {
     public static class Product
@@ -20,51 +18,64 @@ namespace PromoteIt.Server
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "Product/{action}/{Email?}")] HttpRequest req, string action, string Email,
             ILogger log)
         {
-            string requestGetBody = "";
-            switch (action)
+            try
             {
-               
-                case"BUSINESS":
-                    requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
-                    MainManager.Instance.InitProductsBought(Email);
-                    return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.productsList));
-                case "GET":
-                    requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
-                    MainManager.Instance.InitProducts(Email);
-                    return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.productsList));
-                case "SUPPLIED":
-                    requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
-                    MainManager.Instance.InitMyProductsSupplied(Email);
-                    return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.productsList));
-                case "NOTSUPPLIED":
-                    requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
-                    MainManager.Instance.InitMyProductsNotSupplied(Email);
-                    return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.productsList));
-                case "BUY":
-                    requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
-                    Model.Product product = new Model.Product();
-                    product = System.Text.Json.JsonSerializer.Deserialize<Model.Product>(requestGetBody);
-                    MainManager.Instance.products.buyProduct(product);
-                    break;
+                string requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
+                switch (action)
+                {
 
-                case "POST":
-                    requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
-                    Model.Product product2 = new Model.Product();
-                    product = System.Text.Json.JsonSerializer.Deserialize<Model.Product>(requestGetBody);
-                    MainManager.Instance.products.addProduct(product);
-                    break;
-                case "SUPPLY":
-                    requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
-                    Model.Product product3 = new Model.Product();
-                    product = System.Text.Json.JsonSerializer.Deserialize<Model.Product>(requestGetBody);
-                    MainManager.Instance.products.supply(product);
-                    break;
-                case "GETALL":
-                    requestGetBody = await new StreamReader(req.Body).ReadToEndAsync();
-                    MainManager.Instance.InitProducts();
-                    return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.productsList));
-                default:
-                    break;
+                    case "BUSINESS":
+                        MainManager.Instance.InitProductsBought(Email);
+                        MainManager.Instance.Logger.AddToLog(new LogItem { Type = "Event", Message = $"Getting products bought from a business: {Email}!" });
+                        return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.productsList));
+                    case "GET":
+                        MainManager.Instance.InitProducts(Email);
+                        MainManager.Instance.Logger.AddToLog(new LogItem { Type = "Event", Message = $"Getting products donated to organization: {Email}" });
+                        return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.productsList));
+
+                    case "SUPPLIED":
+                        MainManager.Instance.InitMyProductsSupplied(Email);
+                        MainManager.Instance.Logger.AddToLog(new LogItem { Type = "Event", Message = $"List of products supplied for user: {Email}" });
+                        return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.productsList));
+
+                    case "NOTSUPPLIED":
+                        MainManager.Instance.InitMyProductsNotSupplied(Email);                       
+                        MainManager.Instance.Logger.AddToLog(new LogItem { Type = "Event", Message = $"List of products not supplied for user: {Email}"});
+                        return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.productsList));
+
+                    case "BUY":
+                        Model.Product product = new Model.Product();
+                        product = System.Text.Json.JsonSerializer.Deserialize<Model.Product>(requestGetBody);
+                        MainManager.Instance.products.buyProduct(product);
+                        MainManager.Instance.Logger.AddToLog(new LogItem { Type = "Event", Message = "A user bought a product!" });
+                        break;
+
+                    case "POST":
+                        Model.Product product2 = new Model.Product();
+                        product = System.Text.Json.JsonSerializer.Deserialize<Model.Product>(requestGetBody);
+                        MainManager.Instance.products.addProduct(product);
+                        MainManager.Instance.Logger.AddToLog(new LogItem { Type = "Event", Message = "A new product has been added!" });                        
+                        break;
+
+                    case "SUPPLY":
+                        Model.Product product3 = new Model.Product();
+                        product = System.Text.Json.JsonSerializer.Deserialize<Model.Product>(requestGetBody);
+                        MainManager.Instance.products.supply(product);                       
+                        MainManager.Instance.Logger.AddToLog(new LogItem { Type = "Event", Message = "Business supplied products!" });
+                        break;
+                    
+                    case "GETALL":
+                        MainManager.Instance.InitProducts();
+                        MainManager.Instance.Logger.AddToLog(new LogItem { Type = "Event", Message = "Getting all products!" });
+                        return new OkObjectResult(System.Text.Json.JsonSerializer.Serialize(MainManager.Instance.productsList));
+                    
+                    default:
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                MainManager.Instance.Logger.AddToLog(new LogItem { exception = ex });
             }
             return null;
         }

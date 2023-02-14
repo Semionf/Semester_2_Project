@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v6.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v6.0": {
+      "Entities_And_ICommand/1.0.0": {
+        "runtime": {
+          "Entities_And_ICommand.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Entities_And_ICommand/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

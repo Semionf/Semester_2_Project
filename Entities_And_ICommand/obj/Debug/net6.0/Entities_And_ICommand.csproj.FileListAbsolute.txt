@@ -1,0 +1,12 @@
+C:\Users\sfurl\source\repos\Semester_2_Project_Server\Entities_And_ICommand\bin\Debug\net6.0\Entities_And_ICommand.deps.json
+C:\Users\sfurl\source\repos\Semester_2_Project_Server\Entities_And_ICommand\bin\Debug\net6.0\Entities_And_ICommand.dll
+C:\Users\sfurl\source\repos\Semester_2_Project_Server\Entities_And_ICommand\bin\Debug\net6.0\Entities_And_ICommand.pdb
+C:\Users\sfurl\source\repos\Semester_2_Project_Server\Entities_And_ICommand\obj\Debug\net6.0\Entities_And_ICommand.csproj.AssemblyReference.cache
+C:\Users\sfurl\source\repos\Semester_2_Project_Server\Entities_And_ICommand\obj\Debug\net6.0\Entities_And_ICommand.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\sfurl\source\repos\Semester_2_Project_Server\Entities_And_ICommand\obj\Debug\net6.0\Entities_And_ICommand.AssemblyInfoInputs.cache
+C:\Users\sfurl\source\repos\Semester_2_Project_Server\Entities_And_ICommand\obj\Debug\net6.0\Entities_And_ICommand.AssemblyInfo.cs
+C:\Users\sfurl\source\repos\Semester_2_Project_Server\Entities_And_ICommand\obj\Debug\net6.0\Entities_And_ICommand.csproj.CoreCompileInputs.cache
+C:\Users\sfurl\source\repos\Semester_2_Project_Server\Entities_And_ICommand\obj\Debug\net6.0\Entities_And_ICommand.dll
+C:\Users\sfurl\source\repos\Semester_2_Project_Server\Entities_And_ICommand\obj\Debug\net6.0\refint\Entities_And_ICommand.dll
+C:\Users\sfurl\source\repos\Semester_2_Project_Server\Entities_And_ICommand\obj\Debug\net6.0\Entities_And_ICommand.pdb
+C:\Users\sfurl\source\repos\Semester_2_Project_Server\Entities_And_ICommand\obj\Debug\net6.0\ref\Entities_And_ICommand.dll

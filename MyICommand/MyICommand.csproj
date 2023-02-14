@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\MyProvider\Utilities\Utilities.csproj" />
+    <ProjectReference Include="..\Entities_And_ICommand\Entities_And_ICommand.csproj" />
+    <ProjectReference Include="..\ProLobby.Data.Sql\PromoteIt.Data.Sql.csproj" />
+    <ProjectReference Include="..\ProLobby.Entities\PromoteIt.Entities.csproj" />
+  </ItemGroup>
+
+</Project>

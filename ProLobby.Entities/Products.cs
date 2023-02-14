@@ -5,12 +5,18 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Utilities;
 
 namespace PromoteIt.Entities
 {
-    public class Products
+    public class Products: BaseEntity
     {
         private static PromoteIt.Data.Sql.Products dataSql = new PromoteIt.Data.Sql.Products();
+
+        public Products(Logger log) : base(log)
+        {
+        }
+
         public void addProduct(Product product)
         {
             dataSql.addProduct(product);
